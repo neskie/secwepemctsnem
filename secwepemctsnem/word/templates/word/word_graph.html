@@ -1,0 +1,16 @@
+<meta property="og:title" content="{{word_obj}}"/>
+<meta property="og:type" content="secwepemc word"/>
+<meta property="og:url" content="http://language.secwepemcradio.ath.cx{% url  word.views.detail word_obj.id%}"/>
+{% if word.obj.imagefile.all %}
+<meta property="og:image" content="http://ia.media-imdb.com/rock.jpg"/>
+{%else%}
+<meta property="og:image" content="http://language.secwepemcradio.ath.cx/media/images/addimage.png"/>
+{%endif%}
+<meta property="og:description" content="{{word_obj.english}}"/>
+{% if word_obj.audiofile.all %}
+{% for audio in word_obj.audiofile.all %}
+<meta property="og:audio" content="http://language.secwepemcradio.ath.cx/media/{{audio.audiofile}}"/>
+{%endfor%}
+{%else%}
+<meta property="og:audio" content="http://language.secwepemcradio.ath.cx/media/images/addimage.png"/>
+{%endif%}

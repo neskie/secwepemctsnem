@@ -1,0 +1,23 @@
+Introduction
+
+This project is a projec to help you learn words and share them with other people.
+
+Modules
+
+
+ * django-haystack (http://haystacksearch.org/)
+ * solr (
+ * pysolr
+ * sqlite3
+ * django-tagging
+ * django-autocomplete
+ * xspf player - button
+ * xspf player - mini slim
+
+
+Thanks
+
+Wikipedia for the image of the Coyote.
+http://commons.wikimedia.org/wiki/File:Coyote_arizona.jpg
+
+

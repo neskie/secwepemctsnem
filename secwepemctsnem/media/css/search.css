@@ -1,0 +1,17 @@
+#id_q{
+width:400px;
+height:30px;
+color:#777;
+}
+
+.play-button {
+  width:17px;margin:0 auto;
+}
+
+table.word-search-results {
+  width:100%;
+}
+table.word-search-results tr, table.word-search-results tr td{
+  font-family: "Aboriginal Sans";
+  font-size:13px;
+}

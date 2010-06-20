@@ -1,0 +1,80 @@
+  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+	        <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+    <head>
+    {% block meta %}
+    {% endblock %}
+      <meta name="google-site-verification"
+      content="zbpuXPzlMsHLxL8adeQKeov9c0tJmiMvh6h5l0mx-Vw" /> <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+        <title>Secwepemctsin Words</title>
+<style type="text/css">
+body { background:#eee; color:#333; font:76%/1.6 "Lucida Grande","Bitstream Vera Sans",Verdana,sans-serif; }
+        </style>
+  <link rel="StyleSheet" href="/media/css/style.css" type="text/css" /> 
+  <link rel="StyleSheet" href="/media/css/menu_style.css" type="text/css" /> 
+    {% block styles %}
+    {% endblock %}
+    {% block scripts %}
+    {% endblock %}
+<!--
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-16872690-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script> -->
+</head>
+<body>
+    <div id="header">
+    <h1>Secwepemctsin Words</h1>
+    
+    <ul id="menu">
+        <li><a href="/">home</a></li>
+        <li><a href="/about">about</a></li>
+        <li><a href="/words">words</a></li>
+        <li><a href="/search">search</a></li>
+        {% if user.is_superuser %}
+        <li><a href="/admin">admin</a></li>
+        {%endif %}
+        {% if user.is_anonymous %}
+        <li><a href="/accounts/login">login</a></li>
+        {%endif %}
+        {% if user.is_authenticated %}
+        <li><a href="/accounts/profile">{{user }}</a></li>
+        <li><a href="/logout">logout</a></li>
+        {%endif %}
+    </ul>
+    </div>
+    <div id="wrapper">
+    {% block sidebar-left %}
+    {% endblock %}
+
+    <div id="sidebar-right">
+    {% block sidebar-right %}
+    You can search for all the words you want.
+    {% endblock %}
+    </div>
+
+    <div id="content">
+    {% block content %}
+    this is content
+    {% endblock %}
+    </div>
+
+    </div>
+
+    <div id="footer">
+    {% block footer %}
+    Project Copyright 2009 Neskie Manuel, but Content Copyright to Sources.
+    {{request.user}}
+    {% endblock %}
+    </div>
+</body>
+</html>

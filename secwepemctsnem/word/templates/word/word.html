@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block meta %}
+{% include "word/word_graph.html" %}
+{% endblock %}
+
+{% block sidebar-right %}
+{% include "search/search_block.html" %}
+<div id="word-image">
+	{%if  word_obj.imgfile.all %}
+	<img src="/media/{{word_obj.audiofile.all|random}}"/>
+	{% else %}
+	<p><a href="/admin/word/imagefile/add">Add an Image</a>.</p>
+	{%endif%}
+</div>
+
+<div id="word-audio">
+	{%if word_obj.audiofile.all %}
+	{% for afile in word_obj.audiofile.all %}
+	<p><a href="/words/audioplayer/{{afile.id}}" target="audioplayer">Play</a></p>
+{%endfor%}
+	{% else %}
+	<p><a href="/admin/word/audiofile/add/">Add an Audio File</a>.</p>
+	{%endif%}
+</div>
+<p>
+To add audio for now you'll have to first upload it.  Then you'll have to
+attach it to the word.
+</p>
+{% if user.is_superuser %}
+<ul>
+	<li><a href="/admin/word/word/{{word_obj.id}}">Edit</a></li>
+</ul>
+{% endif %}
+<p>
+<b>Tags</b>
+{% if user.is_superuser %}
+<a  href="/admin/tagging/taggeditem/add?object_id={{word_obj.id}}&content_type={{word_type.id}}">+</a><br />
+{% endif %}
+</p>
+{% endblock %}
+
+{% block content %}
+{% if word_obj %}
+
+<p>
+<b>{{word_obj}}</b> 
+<em>{{word_obj.english}}</em>
+</p>
+<br />
+{% for audio in word_obj.audiofile.all %}
+<object type="application/x-shockwave-flash" width="250" height="15" data="http://language.secwepemcradio.ath.cx/media/xspf_player/xspf_player_slim.swf?playlist_url=http://language.secwepemcradio.ath.cx/{% url word.views.detail word_obj.id %}?xspf=1">
+	<param name="player_title" value="Weytk">
+</object>
+<br />
+{%endfor%}
+{% for audio in word_obj.audiofile.all %}
+<a href="/media/{{audio.audiofile}}">Download</a>
+{%endfor%}
+
+{% else %}
+<p>No words are available.</p>
+{% endif %}
+{% load tagging_tags %}
+{% tags_for_object word_obj as wordtags %}
+{%for category in wordtags %}
+<a  href="/words/browse/category/{{category.id}}">{{category}}</a>
+{%endfor%}
+
+{% endblock %}

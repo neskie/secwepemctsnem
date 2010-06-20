@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block styles%}
+<link rel="stylesheet" type="text/css" href="/media/css/error.css"/>
+{% endblock %}
+{% block sidebar-right%}
+{% include "search/search_block.html" %}
+{% endblock %}
+
+{% block content %}
+<h1>
+Page Not Found (404)
+</h1>
+
+<div style="float:left;">
+<img src="/media/images/coyote404.png" />
+</div>
+<div class="error-message">
+<blockquote>
+
+I'm pretty good at finding stuff, but we don't have what you're looking for.
+You can search some more. <span class="author"> -- Coyote</span>
+
+</blockquote>
+</div>
+
+
+{% endblock %}

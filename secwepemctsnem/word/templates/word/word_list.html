@@ -1,0 +1,32 @@
+{% extends "word/index.html" %}
+{% load word_tags %}
+
+
+{% block content %}
+<h2>{{title}}</h2>
+
+    <ul>
+    {% for object in object_list %}
+    <li><a href="/words/{{object.id}}">{{ object.secwepemc }}</a> - {{ object.english }}
+    {%if object.audiofile.all %} 
+    <img style="width:15px;" src="/media/images/iconspeaker.png" alt="Has Audio"/>
+    {%endif%}
+    </li>
+    {% endfor %}
+    </ul>
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+    </div>
+{% endblock %}

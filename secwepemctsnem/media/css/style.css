@@ -1,0 +1,132 @@
+body {
+  font-family: "Trebuchet MS", Verdana, Helvetica, sans-serif;
+  background-color:#555;
+  color: #000;
+  padding:0;
+  margin:0;
+}
+
+div#wrapper,div#header, div#footer {
+  background-color: #DDDDDD;
+  width:100%;
+  max-width:1024px;
+  padding:0;
+}
+
+div#footer {
+  text-align: center;
+}
+div#form {
+  width:50%;
+  float:right;
+}
+div#greetings {
+  width:50%;
+  float:left;
+}
+h1 {
+  font-size:1.8em;
+  color:#666;
+  margin:0.4em 0 0.2em 0;
+  font:"Trebuchet MS", "Lucida Grande","Bitstream Vera Sans",Verdana,sans-serif;
+}
+
+a.category{
+  text-decoration:none;
+  background-color:red;
+  color:white;
+  padding:5px;
+}
+
+#wrapper {
+  text-align: left;
+  margin: 0px auto;
+  padding: 0px;
+  border:0;
+}
+
+#sidebar-left {
+  float: left;
+  padding:0 5px;
+  width: 150px;
+}
+div#wrapper{
+  float:left;
+}
+#sidebar-right {
+  float: right;
+  padding:0 5px;
+  width: 250px;
+}
+
+div#content { 
+  padding-left:5px;
+  padding-right: 260px;
+}
+
+div#footer {
+  clear: both;
+  background: #A2A2A2;
+}
+#word-image,#word-audio {
+  margin: 3px;
+  width:120px;
+  min-height:120px;
+  text-align:center;
+  margin-left:  auto;
+  margin-right:  auto;
+  border:1px;
+  border-style:solid;
+  -moz-border-radius:15px;
+  -webkit-border-radius: 15px;
+}
+#word-image p,#word-audio p {
+  padding-top:40px;
+}
+#word-image p a,#word-audio p a {
+  text-decoration:none;
+}
+div.pagination {
+  width:500px;;
+  margin:10px auto;
+  text-align:center;
+}
+table#table-listing {
+  width:100%;
+  text-align:center;
+}
+tr.odd {
+  color:#fff;
+  background-color:#000;
+}
+
+tr.even {
+  background-color:#ddd;
+}
+
+tr.odd a {
+  color:#fff;
+}
+
+tr.even a {
+  color:#000;
+}
+ul.pagelist li {
+  list-item:none;
+  display:inline;
+  padding:5px;
+  margin:0 4px;
+  border-style:solid;
+  border-width:1px;
+  border-color:#000;
+}
+ul.pagelist{
+  display:inline;
+  margin:0;
+  padding:0;
+}
+
+#login-form, #login-form table{
+  width:300px;
+  margin: 0 auto;
+}

@@ -1,0 +1,8 @@
+   {%if audiofile %}
+   <audio src="/media/{{audiofile}}" autoplay="autoplay" controls="controls">
+   Your browser does not support the audio element.
+   </audio>
+   <a href="download">Download</a>
+   {%else%}
+   Your Audio will play in here.
+   {%endif%}

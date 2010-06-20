@@ -1,0 +1,17 @@
+{% extends "word/index.html" %}
+{% load word_tags %}
+{% block scripts %}
+
+{% endblock %}
+
+{% block content %}
+<h2>{{title}}</h2>
+
+
+<ul class="pagelist">
+{%for letter in alphabet %}
+<li><a href="alphabet/{{letter}}">{{letter}}</a></li>
+{%endfor%}
+</ul>
+
+{% endblock %}

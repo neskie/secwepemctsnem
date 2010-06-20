@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load word_tags %}
+
+{% block sidebar-right%}
+{% include "search/search_block.html" %}
+<h2>Browse</h2>
+<ul>
+		<li><a href="/words">All</a></li>
+		<li><a href="/words/browse/alphabet">Alphabet</a></li>
+		<li><a href="/words/browse/audio">Audio</a></li>
+		<li><a href="/words/browse/category">Category</a></li>
+</ul>
+{% load cache %}
+{% cache 100 sidebar %}
+<h2> Five Random Words</h2>
+{% get_random word.Word 5 as recent_links %}
+{% for word in  recent_links %}
+<a href="/words/{{word.id}}">{{word}}</a>
+    {%if word.audiofile.all %} 
+    <img style="width:15px;" src="/media/images/iconspeaker.png" alt="Has
+    Audio"/><br/>
+    {%endif%}
+    {%endfor%}
+{% endcache %}
+{% endblock %}
+
+{% block content %}
+<h2>{{title}}</h2>
+{%if count %}
+Count: {{count}}
+{% endif %}
+
+{% if words %}
+    <ul>
+    {% for word in words.object_list %}
+    <li><a href="/words/{{word.id}}">{{ word.secwepemc }}</a> - {{ word.english }}
+    {%if word.audiofile.all %} 
+    <img style="width:15px;" src="/media/images/iconspeaker.png" alt="Has Audio"/>
+    {%endif%}
+    </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No words are available.</p>
+{% endif %}
+
+    <div class="pagination" style="text-align:center">
+        {% if words.has_previous %}
+            <a href="?page={{ words.previous_page_number }}">previous</a>
+        {% endif %}
+	{{words.number|pagelist:words.paginator.num_pages }}
+        {% if words.has_next %}
+            <a href="?page={{ words.next_page_number }}">next</a>
+        {% endif %}
+    </div>
+    {% if request_detail %}
+    <a href="pdf">PDF</a>
+    <a href="excel">Excel</a>
+    {%endif%}
+{% endblock %}

@@ -1,0 +1,25 @@
+{% block scripts %}
+<script type="text/javascript"> 
+function setbg(color)
+{
+document.getElementById("id_q").style.color=color
+}
+</script> 
+{% endblock %}
+{% block content %}
+    <form method="get" action="/search/">
+    <table> 
+            <tr>
+		    {%if query%}
+		    <td><input value='{{query}}' onblur="this.value='{{query}}'; setbg('#777');" onfocus="this.value='{{query}}'; setbg('#000')" type="text" name="q" id="id_q" ></input></td>
+
+{%else%}
+<td><input  type="text" name="q" id="id_q" ></input></td>
+{%endif%}
+<td><input type="hidden" name="models" value="word.word" id="id_models_0" ></input></td>
+<td><input type="submit" value="Search"></input></td>
+</tr> 
+        </table> 
+
+</form>
+{% endblock %}
