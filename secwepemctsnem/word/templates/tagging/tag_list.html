@@ -1,0 +1,20 @@
+{% extends "word/index.html" %}
+{% load word_tags %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="/media/css/tags.css"
+{% endblock %}
+
+{% block content %}
+<h2>{{title}}</h2>
+
+<p> There are {{ total }} words. Some are categorized.</p>
+
+{% load tagging_tags %}
+{% tag_cloud_for_model word.Word as wordcloud with steps=9 min_count=1 distribution=log %}
+
+{%for tag in wordcloud %}
+<a class="tag-{{tag.font_size}}"  href="/words/browse/category/{{tag.id}}">{{tag}}</a> ({{tag.count}})
+
+{%endfor%}
+
+{% endblock %}
