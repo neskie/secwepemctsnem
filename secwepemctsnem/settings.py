@@ -4,7 +4,6 @@ from local_settings import *
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
-PROJ_ROOT = os.path.dirname(os.path.realpath(__file__))
 STATIC_DOC_ROOT = PROJ_ROOT + '/media/'
 
 ADMINS = (
