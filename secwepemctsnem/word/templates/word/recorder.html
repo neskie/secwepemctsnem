@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block sidebar-right%}
+{% include "search/search_block.html" %}
+<h2> Weytk </h2>
+<p>
+You are here.
+</p>
+{% block styles %}
+	<style type="text/css">
+	
+		#recorderDIVHolder{
+			border-color: #cccc99;
+			border-width: 1px;
+			border-style: solid;
+			width: 323px;
+			height: 150px;
+		}
+		.link {
+			cursor: pointer;
+			color: blue;
+			text-decoration: underline;
+		}
+		
+		#leftDIV{
+			float: left;
+			width: 66%;
+		}
+		#rightDIV {
+			float: left;
+			margin-left: 10px;
+			padding: 5px;
+			width: 200px;
+			color: #aaaaaa;
+			background-color: #f4f4f4;
+		}
+	</style>
+{% endblock %}
+
+{% endblock %}
+{% block scripts%}
+<script src="/media/scripts/swfobject.js"></script>
+	
+<script>
+	function createRecorder(id, server){
+		var mySnd = "snd{{filename}}";
+		mySnd = mySnd.replace(/\./g, "_");
+		
+		var flashvars = {};
+		flashvars.mySound=mySnd;
+		flashvars.myServer = server;
+		flashvars.timeLimit = 20;
+
+		var parameters = {};
+
+		var attributes = {};
+		attributes.id = "audioRecorder";
+		attributes.name = "audioRecorder";
+
+		swfobject.embedSWF("/media/scripts/audioRecorder.swf", id, "323", "150", "10", "scripts/expressInstall", flashvars, parameters, attributes);		
+	}
+</script>
+{% endblock %}
+
+{% block content %}
+{{ oops }}
+<div id="leftDIV">
+<h3>Audio Recording, Playback with Red5</h3>
+
+{{filename}}
+{{ip}}
+{{port}}
+
+<p>
+Please contact me directly at hooping4@msu.edu if you have
+questions, or if you need any additional information.
+</p>
+
+<fieldset>
+<legend>Record a Word in Secwepemctsin</legend>
+<div id="recorderDIVHolder">
+	<span class="link" id="recorderDIV" onclick="createRecorder(this.id, 'rtmp://secwepemcradio.ath.cx/oflaDemo')">LOAD</span>
+</div>
+
+</fieldset>
+
+</div>
+
+{% endblock %}

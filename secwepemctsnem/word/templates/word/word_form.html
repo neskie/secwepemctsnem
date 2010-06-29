@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block sidebar-right%}
+{% include "search/search_block.html" %}
+<h2> Weytk </h2>
+<p>
+Registration will be coming soon so you can add your own words and sounds to this site. 
+</p>
+
+{% endblock %}
+
+{% block content %}
+<h1>Add a Word</h1>
+{% if form.has_errors %}
+<h2>Please correct the following error{{ form.errors|pluralize }}:</h2>
+{% endif %}
+
+<form method="post" action=".">
+
+{{form.as_p}}
+<input type="submit" />
+</form>
+{% endblock %}

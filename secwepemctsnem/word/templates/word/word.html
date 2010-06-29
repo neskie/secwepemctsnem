@@ -3,6 +3,25 @@
 {% include "word/word_graph.html" %}
 {% endblock %}
 
+{% block scripts %}
+	<script src="/media/scripts/swfobject.js"></script> 
+	<script> 
+	function loadSound(id, file, server){
+    	var flashvars = {};
+		flashvars.file=file;
+		flashvars.streamer = server;
+ 
+		var parameters = {};
+ 
+		var attributes = {};
+		attributes.id = "audioPlayer";
+		attributes.name = "audioPlayer";
+ 
+	    swfobject.embedSWF("/media/scripts/player.swf", id, "200", "20", "9.0.0", "scripts/expressInstall", flashvars, parameters, attributes);		
+	}
+</script>
+{% endblock %}
+
 {% block sidebar-right %}
 {% include "search/search_block.html" %}
 <div id="word-image">
@@ -25,7 +44,11 @@
 <p>
 To add audio for now you'll have to first upload it.  Then you'll have to
 attach it to the word.
+<a href="/words/recorder?filename={{word_obj.strip_accents}}">Record a word</a>
+{% if flashfile %}
+<div id="player1">Stream a FLV file: <span class="link" id="flvDIV" onclick="loadSound(this.id, '{{flashfile}}', 'rtmp://secwepemcradio.ath.cx/oflaDemo')">LOAD</span></div> 
 </p>
+{%endif%}
 {% if user.is_superuser %}
 <ul>
 	<li><a href="/admin/word/word/{{word_obj.id}}">Edit</a></li>
