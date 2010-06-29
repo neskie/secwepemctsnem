@@ -21,26 +21,22 @@ from reportlab.pdfbase.pdfmetrics import registerFontFamily
 from django.contrib.contenttypes.models import ContentType
 from tagging.models import Tag
 
-def index(request):
+def recorder(request):
     word_list = Word.objects.all()
-    paginator = Paginator(word_list, 10) # Show 25 contacts per page
 
-    # Make sure page request is an int. If not, deliver first page.
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
+    filename = request.GET.get('filename').replace('\'','')
+    ip = request.META['REMOTE_ADDR']
+    port = request.META['REMOTE_PORT']
+    if not filename:
+        filename = "testing";
 
-    # If page request (9999) is out of range, deliver last page of results.
-    try:
-        words = paginator.page(page)
-    except (EmptyPage, InvalidPage):
-        words = paginator.page(paginator.num_pages)
-
-    t = loader.get_template('word/index.html')
+    t = loader.get_template('word/recorder.html')
     c = RequestContext(request,{
-        'words': words,
-        'title': 'All Words',
+        'words': word_list,
+        'filename': filename,
+        'ip': ip,
+        'port': port,
+        'title': 'Record Some Words',
     })
     return HttpResponse(t.render(c))
 
@@ -146,6 +142,13 @@ def category_detail(request,cat_id):
 def detail(request,word_id):
     word_type = ContentType.objects.get(app_label="word", model="word")
     word = Word.objects.get(pk=word_id)
+    flashfile = "/srv/apache/django-projects/secwepemctsnem/media/files/flashfiles/snd%s.flv"% word.strip_accents()
+    if os.path.isfile(flashfile):
+        flashfile = 'snd%s.flv'%word.strip_accents()
+    else:
+        flashfile = ''
+    
+
     t = loader.get_template('word/word.html')
     xspf = request.GET.get('xspf')
     output = ''
@@ -170,6 +173,7 @@ def detail(request,word_id):
     else:
         c = RequestContext(request,{
             'word_obj': word,
+            'flashfile': flashfile,
             'word_type': word_type,
             'xspf': xspf,
         })
