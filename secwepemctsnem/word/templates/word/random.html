@@ -1,0 +1,1 @@
+{% load word_tags %} {% load cache %} {% cache 86400 random %}{% get_random word.Word 1 as WordOfTheDay %}{% for word in  WordOfTheDay %}<a class="wordoftheday" href="http://language.secwepemcradio.ath.cx{% url word.views.detail word.id%}">{{word}}</a>{%endfor%} {% endcache %} {% get_random word.Word 1 as WordOfTheDay %}

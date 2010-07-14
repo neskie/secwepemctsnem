@@ -5,10 +5,19 @@
 <p>
 Registration will be coming soon so you can add your own words and sounds to this site. 
 </p>
+{% load cache %}
+{% load common_tags %}
+<h2>Secwepemctsin in the News</h2>
+<a href="http://news.google.ca/news?q=secwepemctsin&um=1&hl=en&ie=UTF-8&output=rss">link</a>
+  {% pull_feed 'http://news.google.ca/news?q=secwepemctsin&um=1&hl=en&ie=UTF-8&output=rss' %}
 
 {% endblock %}
 
 {% block content %}
+<div id="wordoftheday">
+<em>Word Of the Day</em><br/>
+{%include "word/random.html" %}
+</div>
 <p>
 Welcome to the Secwepemctsnem a place to help you learn to speak Secwepemctsín.
 This is a good place to be on the internet when you are away from home, or you
