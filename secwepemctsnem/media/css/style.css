@@ -130,3 +130,27 @@ ul.pagelist{
   width:300px;
   margin: 0 auto;
 }
+#wordoftheday {
+  width:500px;
+  margin:0 auto;
+  text-align:center;
+  font-size:2em;
+}
+#wordoftheday em{
+  color:#555;
+  margin-left:-7em;
+}
+
+#wordoftheday span{
+  margin-left:auto;
+  margin-right:0;
+}
+
+#wordoftheday span a{
+  color:#000;
+}
+
+
+.blogposts table {
+  margin-left:-100px;
+}
