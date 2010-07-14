@@ -4,7 +4,6 @@
 
 {% block content %}
 <h2>{{title}}</h2>
-
     <ul>
     {% for object in object_list %}
     <li><a href="/words/{{object.id}}">{{ object.secwepemc }}</a> - {{ object.english }}
@@ -15,11 +14,8 @@
     {% endfor %}
     </ul>
 
-
-
     <div class="pagination" style="text-align:center">
         <span class="current">
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
     </span><br/><br/>
         {% if page_obj.has_previous %}
             <a href="?page={{ page_obj.previous_page_number }}">previous</a>

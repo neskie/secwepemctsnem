@@ -26,6 +26,7 @@ tags = Tag.objects.all()
 urlpatterns = patterns('word.views',
     (r'^$', object_list, qs),
     (r'^recorder$', 'recorder'),
+    (r'^random$', 'random_word'),
     (r'^all$', object_list, { 'queryset': words, 'paginate_by':10, } ),
     (r'^browse/audio$', 'audio'),
     (r'^browse/alphabet$', direct_to_template,

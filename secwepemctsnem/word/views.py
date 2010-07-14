@@ -20,6 +20,10 @@ from reportlab.lib.units import inch
 from reportlab.pdfbase.pdfmetrics import registerFontFamily
 from django.contrib.contenttypes.models import ContentType
 from tagging.models import Tag
+from django.views.decorators.cache import cache_page
+from django.core import serializers
+
+
 
 def recorder(request):
     word_list = Word.objects.all()
@@ -235,3 +239,12 @@ def show_pdf(request,cat_id):
     buffer.close()
     response.write(pdf)
     return response
+
+def random_word(request):
+    data = Word.objects.order_by('?')[0]
+#    data = serializers.serialize('json',(data,))
+    t = loader.get_template('word/random.html')
+    c = RequestContext(request,{
+        'word': data,
+    })
+    return HttpResponse(t.render(c))
