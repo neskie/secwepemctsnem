@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 {% block sidebar-right%}
 {% include "search/search_block.html" %}
-<h2> Weytk </h2>
+<h2>Flash Recording </h2>
 <p>
-You are here.
+The idea for recording audio from flash came from <a
+	href="http://fms.denniehoopingarner.com/">here</a>.
 </p>
 {% block styles %}
 	<style type="text/css">
@@ -42,8 +43,7 @@ You are here.
 	
 <script>
 	function createRecorder(id, server){
-		var mySnd = "snd{{filename}}";
-		mySnd = mySnd.replace(/\./g, "_");
+		var mySnd = "{{ip}}_{{port}}_{{filename}}";
 		
 		var flashvars = {};
 		flashvars.mySound=mySnd;
@@ -62,27 +62,27 @@ You are here.
 {% endblock %}
 
 {% block content %}
-{{ oops }}
-<div id="leftDIV">
-<h3>Audio Recording, Playback with Red5</h3>
+<h3>Record <a href="{% url word.views.detail word.id %}" title="{{ word.english }}">{{ word.secwepemc }}</a> in Secwepemctsín</h3>
+Instead of recording an audio file and uploading it if you have a flash
+enabled browser and a microphone.  You can record a word right now and submit
+it.
 
-{{filename}}
-{{ip}}
-{{port}}
-
-<p>
-Please contact me directly at hooping4@msu.edu if you have
-questions, or if you need any additional information.
-</p>
-
+<div style="width:590px;">
 <fieldset>
-<legend>Record a Word in Secwepemctsin</legend>
-<div id="recorderDIVHolder">
-	<span class="link" id="recorderDIV" onclick="createRecorder(this.id, 'rtmp://secwepemcradio.ath.cx/oflaDemo')">LOAD</span>
+	<legend>Click on LOAD to start recording. Once you're done, wait a few
+	seconds and click submit.</legend> 
+<div id="recorderDIVHolder" style="width:385;margin:0 auto;">
+<span class="link" id="recorderDIV" onclick="createRecorder(this.id, 'rtmp://secwepemcradio.ath.cx/oflaDemo')">LOAD</span>
 </div>
-
 </fieldset>
-
 </div>
+<form action="{% url word.views.recorder %}?word_id={{word.id}}" method="post">
+<table>
+{{ form }}
+<tr><td><input type="submit" value="Submit" /></td></tr>
+</table>
+</form>
+
+
 
 {% endblock %}

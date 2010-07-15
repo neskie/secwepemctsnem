@@ -38,13 +38,12 @@
 	<p><a href="/words/audioplayer/{{afile.id}}" target="audioplayer">Play</a></p>
 {%endfor%}
 	{% else %}
-	<p><a href="/admin/word/audiofile/add/">Add an Audio File</a>.</p>
+	<p><a href="/admin/word/audiofile/add/">Upload an Audio File</a>.</p>
 	{%endif%}
 </div>
 <p>
-To add audio for now you'll have to first upload it.  Then you'll have to
-attach it to the word.
-<a href="/words/recorder?filename={{word_obj.strip_accents}}">Record a word</a>
+
+You can <a href="/words/recorder?word_id={{word_obj.id}}">record a word</a>.
 {% if flashfile %}
 <div id="player1">Stream a FLV file: <span class="link" id="flvDIV" onclick="loadSound(this.id, '{{flashfile}}', 'rtmp://secwepemcradio.ath.cx/oflaDemo')">LOAD</span></div> 
 </p>

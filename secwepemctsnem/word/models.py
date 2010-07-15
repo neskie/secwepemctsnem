@@ -8,17 +8,23 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from datetime import datetime
+from django.utils.encoding import force_unicode
 import tagging
 import unicodedata
+from datetime import datetime
 
 class AudioFile(models.Model):
     audiofile = models.FileField(upload_to="files")
+    recorded_by = models.CharField(max_length=100,blank=True)
+    pub_date = models.DateTimeField(default=datetime.now())
     description = models.CharField(max_length=400)
     def __unicode__(self):
-        return str(self.audiofile)
+        return force_unicode(self.audiofile)
 
 class ImageFile(models.Model):
     imagefile = models.FileField(upload_to="files")
+    recorded_by = models.CharField(max_length=100,blank=True)
+    pub_date = models.DateTimeField(default=datetime.now())
     description = models.CharField(max_length=400)
     def __unicode__(self):
         return self.description

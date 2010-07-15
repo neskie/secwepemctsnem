@@ -7,6 +7,7 @@ from models import Word
 from django.template import RequestContext
 from tagging.models import Tag
 from django.views.generic.create_update import create_object
+from forms import WordForm
 
 words = Word.objects.all()
 alphabet = ['a','á','c','e',u'é','g','h','i','k','l','m','n','q', 'r', 's', 't', 'u', 'w', 'x', 'y']
@@ -25,11 +26,12 @@ qs = {
 tags = Tag.objects.all()
 urlpatterns = patterns('word.views',
     (r'^$', object_list, qs),
-    (r'^recorder$', 'recorder'),
-    (r'^random$', 'random_word'),
-    (r'^all$', object_list, { 'queryset': words, 'paginate_by':10, } ),
-    (r'^browse/audio$', 'audio'),
-    (r'^browse/alphabet$', direct_to_template,
+    (r'^recorder/$', 'recorder'),
+    (r'^search/$', 'search'),
+    (r'^random/$', 'random_word'),
+    (r'^all/$', object_list, { 'queryset': words, 'paginate_by':10, } ),
+    (r'^browse/audio/$', 'audio'),
+    (r'^browse/alphabet/$', direct_to_template,
             {'template': 'word/alphabet.html',
              'extra_context':{'alphabet':alphabet, 'title':'Words Starting With'}
             }),
@@ -38,15 +40,14 @@ urlpatterns = patterns('word.views',
              'extra_context':{'alphabet':alphabet}
             }),
     (r'^browse/alphabet/(?P<letter>\w+)$', 'alphabet'),
-    (r'^browse/category$', object_list, { 'queryset': tags,
+    (r'^browse/category/$', object_list, { 'queryset': tags,
         'extra_context':{'total':total, 'title':'Categories'} } ),
     (r'^browse/category/(?P<cat_id>\d+)/$', 'category_detail'),
     (r'^browse/category/(?P<cat_id>\d+)/excel$', 'show_excel'),
     (r'^browse/category/(?P<cat_id>\d+)/pdf$', 'show_pdf'),
      (r'^create/?$', create_object,
-           dict(info_dict, post_save_redirect="/words/") ),
+           dict(form_class=WordForm, post_save_redirect="/words/") ),
     (r'^audio/(?P<word_id>\d+)/$', 'jsonaudiofile'),
-    (r'^audioplayer$', direct_to_template, {'template': 'word/audioplayer.html'}),
     (r'^audioplayer/(?P<audio_id>\d+)/$', 'audioplayer'),
     (r'^audioplayer/(?P<audio_id>\d+)/download$', 'download_view'),
     (r'^(?P<word_id>\d+)/$', 'detail'),

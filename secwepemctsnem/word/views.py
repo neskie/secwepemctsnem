@@ -1,10 +1,10 @@
 # Create your views here.
 # -*- coding: utf-8 -*-
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, Context, loader
 from word.models import *
 from django.core.paginator import Paginator
-from django.template.defaultfilters import slugify
+from django.template.defaultfilters import slugify, urlize
 from django.core import serializers 
 import csv
 import mimetypes
@@ -22,27 +22,87 @@ from django.contrib.contenttypes.models import ContentType
 from tagging.models import Tag
 from django.views.decorators.cache import cache_page
 from django.core import serializers
-
-
+from forms import *
+from django.conf import settings
+from django.utils.encoding import smart_unicode, smart_str, force_unicode
+import subprocess
 
 def recorder(request):
-    word_list = Word.objects.all()
+    '''This view allows the user to record audio fiels using the flash
+    recorder to record a word that is already in the database.'''
+    if request.method == 'POST':
+        form = AudioRecorderForm(request.POST) # A form bound to the POST data
+        if form.is_valid(): # All validation rules pass
+            word_id = form.cleaned_data['word']
+            wordname = smart_unicode(form.cleaned_data['wordname'])
+            ip = form.cleaned_data['ip']
+            port = form.cleaned_data['port']
+            flashfile = u"%sfiles/flashfiles/%s_%s_%s.flv" % (settings.MEDIA_ROOT,
+                    form.cleaned_data['ip'],
+                    form.cleaned_data['port'],
+                    wordname)
+            #Write IP, Port, name to Log
+            #Check if there are already audiofiles with that wordname.
+            afiles = AudioFile.objects.filter(audiofile__contains="files/audiofiles/%s"%wordname)
+            #Now convert flashfile if it exists to an mp3.
+            if os.path.exists(flashfile.encode('utf-8')):
+                afile = "%sfiles/audiofiles/%s_%d.mp3" %(
+                        settings.MEDIA_ROOT,
+                    wordname,
+                    len(afiles),
+                    )
+                subprocess.Popen(['/usr/bin/ffmpeg', '-y', '-i',
+                    flashfile.encode('utf-8'), afile.encode('utf-8')]) 
+                a = AudioFile(
+                        audiofile='files/audiofiles/%s_%d.mp3'%(smart_str(wordname),len(afiles)),
+                        description="IP:%s"%form.cleaned_data['ip'],
+                        )
+                a.save()
+                word_id.audiofile.add(a)
 
-    filename = request.GET.get('filename').replace('\'','')
-    ip = request.META['REMOTE_ADDR']
-    port = request.META['REMOTE_PORT']
-    if not filename:
-        filename = "testing";
+                word_id = request.GET.get('word_id')
+                return HttpResponseRedirect('/words/%s'%word_id) # Redirect after
+        word_id = request.GET.get('word_id')
+        c = RequestContext(request,{
+            'word': Word.objects.get(pk=word_id),
+            'filename': wordname,
+            'ip': ip,
+            'port': port,
+            'form': form,
+            'root': flashfile,
+            'title': 'Record Some Words',
+        })
 
-    t = loader.get_template('word/recorder.html')
-    c = RequestContext(request,{
-        'words': word_list,
-        'filename': filename,
-        'ip': ip,
-        'port': port,
-        'title': 'Record Some Words',
-    })
-    return HttpResponse(t.render(c))
+        t = loader.get_template('word/recorder.html')
+
+        return HttpResponse(t.render(c))
+
+    else:
+        word_id = request.GET.get('word_id')
+        ip = request.META['REMOTE_ADDR']
+        port = request.META['REMOTE_PORT']
+        '''If the word doesn't exist offer to create it'''
+        try:
+            word= Word.objects.get(pk=word_id)
+        except Word.DoesNotExist:
+            return HttpResponseRedirect("/words/create/")
+
+        #Return a bounded form, because the word needs to exist in the database.
+        form = AudioRecorderForm(dict(ip=ip,word=word.id,wordname=word.secwepemc,port=port))
+        flashfile = "%sfiles/flashfiles/%s_%s_%s.flv" % (settings.MEDIA_ROOT, ip,port, word.secwepemc)
+        c = RequestContext(request,{
+            'word': word,
+            'filename': word.secwepemc,
+            'ip': ip,
+            'port': port,
+            'form': form,
+            'root': flashfile,
+            'title': 'Record Some Words',
+        })
+
+        t = loader.get_template('word/recorder.html')
+
+        return HttpResponse(t.render(c))
 
 def show_excel(request,cat_id):
     # use a StringIO buffer rather than opening a file
@@ -146,34 +206,20 @@ def category_detail(request,cat_id):
 def detail(request,word_id):
     word_type = ContentType.objects.get(app_label="word", model="word")
     word = Word.objects.get(pk=word_id)
-    flashfile = "/srv/apache/django-projects/secwepemctsnem/media/files/flashfiles/snd%s.flv"% word.strip_accents()
-    if os.path.isfile(flashfile):
-        flashfile = 'snd%s.flv'%word.strip_accents()
-    else:
-        flashfile = ''
     
+    flashfile = ''
 
     t = loader.get_template('word/word.html')
     xspf = request.GET.get('xspf')
     output = ''
     if xspf:
-        output = '''<?xml version="1.0" encoding="UTF-8"?>
-<playlist version="1" xmlns="http://xspf.org/ns/0/">
-  <trackList>
-'''
-        for afile in word.audiofile.all():
-            output += '''    <track>
-     <location>http://language.secwepemcradio.ath.cx/media/%s</location></track>
-     <title>%s</title>
-   </track>
-            ''' % (afile.audiofile, afile.description)
-        output += '''
-  </trackList>
-</playlist>
-        ''' 
-        response = HttpResponse(output, mimetype='application/xspf+xml')
-        response['Content-Disposition'] = 'filename=word-%s.xml'%str(word.id).split('/')[-1]
-        return response
+        t = loader.get_template('word/xspf.html')
+        c = RequestContext(request,{
+            'word': word,
+            'word_type': word_type,
+            'xspf': xspf,
+        })
+        return HttpResponse(t.render(c))
     else:
         c = RequestContext(request,{
             'word_obj': word,
@@ -248,3 +294,26 @@ def random_word(request):
         'word': data,
     })
     return HttpResponse(t.render(c))
+
+def search(request):
+    from django.db import connection, transaction
+    query = request.GET.get('q')
+    if query:
+        cursor = connection.cursor()
+        cursor.execute("SELECT word_id FROM word_search WHERE body MATCH '%s'" %
+                query)
+        results = [ x[0] for x in  cursor.fetchall()]
+        words = Word.objects.filter(id__in=results)
+        del results
+    else:
+        words = Word.objects.none()
+
+    c = RequestContext(request,{
+        'title': 'Record Some Words',
+        'words': words,
+        'query': query,
+    })
+
+    t = loader.get_template('search/searchql.html')
+    return HttpResponse(t.render(c))
+
