@@ -2,3 +2,4 @@
 *.db
 media/files/*
 media/admin
+local_settings.py
