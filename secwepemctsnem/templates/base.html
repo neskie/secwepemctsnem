@@ -1,23 +1,21 @@
-  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-	        <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
-    <head>
-    {% block meta %}
-    {% endblock %}
-    <meta property="fb:admins" content="555752650" />
-      <meta name="google-site-verification"
-      content="zbpuXPzlMsHLxL8adeQKeov9c0tJmiMvh6h5l0mx-Vw" /> <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
-        <title>Secwepemctsin Words</title>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+{% block meta %}
+{% endblock %}
+<meta property="fb:admins" content="555752650" />
+<meta name="google-site-verification" content="zbpuXPzlMsHLxL8adeQKeov9c0tJmiMvh6h5l0mx-Vw" />
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<title>{% block title %}Secwepemctsin Words{% endblock %}</title>
 <style type="text/css">
-body { background:#eee; color:#333; font:76%/1.6 "Lucida Grande","Bitstream Vera Sans",Verdana,sans-serif; }
-        </style>
-  <link rel="StyleSheet" href="/media/css/style.css" type="text/css" /> 
-  <link rel="StyleSheet" href="/media/css/menu_style.css" type="text/css" /> 
-    {% block styles %}
-    {% endblock %}
-    {% block scripts %}
-    {% endblock %}
-<!--
+</style>
+<link rel="StyleSheet" href="/media/css/style.css" type="text/css" /> 
+<link rel="StyleSheet" href="/media/css/menu_style.css" type="text/css" /> 
+<link rel="stylesheet" type="text/css" href="/media/css/23736.css">
+{% block styles %}
+{% endblock %}
+{% block scripts %}
+{% endblock %}
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -30,51 +28,83 @@ body { background:#eee; color:#333; font:76%/1.6 "Lucida Grande","Bitstream Vera
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
   })();
 
-</script> -->
+</script>
 </head>
 <body>
-    <div id="header">
-    <h1>Secwepemctsin Words</h1>
+<div id="header" class="container_12">
+  <div id="site-title" class="grid_6">
+  <h1><a href="/">Secwepemctsin Words</a></h1>
+  </div>
+  <div id="messages" class="grid_6">
+<p class="grid_3 alpha">
+<em>Word of the Day</em><br/>
+{%include "word/random.html" %}
+</p>
+    <img style="height:63px;" class="grid_3 omega" src="{{ MEDIA_URL }}images/corner-kekuli.png"/>
+  </div>
+
     
-    <ul id="menu">
-        <li><a href="/">home</a></li>
-        <li><a href="/about">about</a></li>
-        <li><a href="/words">words</a></li>
-        <li><a href="/search">search</a></li>
+</div> <!-- End Header -->
+  <div id="menu" class="container_12">
+    <div class="grid_12">
+    <ul>
+        <li><a href="/about">About</a></li>
+        <li><a href="/words">Words</a></li>
+        <li><a href="/search">Search</a></li>
         {% if user.is_superuser %}
-        <li><a href="/admin">admin</a></li>
+        <li><a href="/admin">Admin</a></li>
         {%endif %}
         {% if user.is_anonymous %}
-        <li><a href="/accounts/login">login</a></li>
+        <li><a href="/accounts/login">Login</a></li>
         {%endif %}
         {% if user.is_authenticated %}
-        <li><a href="/accounts/profile">{{user }}</a></li>
-        <li><a href="/logout">logout</a></li>
+        <li><a href="/accounts/profile">{{ user|title }}</a></li>
+        <li><a href="/logout">Logout</a></li>
         {%endif %}
     </ul>
-    </div>
-    <div id="wrapper">
-    {% block sidebar-left %}
-    {% endblock %}
+  </div>
+  </div>
+<div id="content" class="container_12">
 
-    <div id="sidebar-right">
-    {% block sidebar-right %}
-    You can search for all the words you want.
-    {% endblock %}
-    </div>
+<div id="main-content" class="grid_8 ">
+{% block content %}
+this is content
+{% endblock %}
+</div>
 
-    <div id="content">
-    {% block content %}
-    this is content
-    {% endblock %}
-    </div>
 
-    </div>
+<div id="sidebar-right" class="grid_4 ">
+{% block sidebar-right %}
+{% include "search/search_block.html" %}
+{% endblock %}
+</div>
 
-    <div id="footer">
-    {% block footer %}
-    Project Copyright 2009 Neskie Manuel, but Content Copyright to Sources.
-    {{request.user}}
+</div>
+
+<div id="footer" class="container_12">
+{% block footer %}
+<div id="" class="grid_4 ">
+<p>
+<a href="http://www.djangoproject.com/"><img
+  src="http://media.djangoproject.com/img/badges/djangosite100x25_grey.gif"
+  style="border:0;" alt="A Django site." title="A Django site." /></a>
+</p>
+</div>
+
+<div id="" class="grid_4 ">
+<p>
+Project Copyright 2009 Neskie Manuel <br />
+Everything else to the source.
+</p>
+</div>
+
+<div id="" class="grid_4 ">
+<p>
+<a href="http://github.com/neskie/secwepemctsnem"><img style="height:25px;border:0px;"
+  src="https://github.com/images/modules/header/logov3.png"/></a>
+</p>
+</div>
+
     {% endblock %}
     </div>
 </body>

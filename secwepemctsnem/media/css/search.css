@@ -9,9 +9,14 @@ color:#777;
 }
 
 table.word-search-results {
-  width:100%;
+  width:99%;
+  margin: 5px 5px;
 }
 table.word-search-results tr, table.word-search-results tr td{
   font-family: "Aboriginal Sans";
   font-size:13px;
+}
+
+table#search-block {
+  width:95%;
 }

@@ -6,15 +6,32 @@ body {
   margin:0;
 }
 
-div#wrapper,div#header, div#footer {
-  background-color: #DDDDDD;
-  width:100%;
-  max-width:1024px;
-  padding:0;
+body {
+  background:#eee;
+  color:#333;
+  font: "Lucida Grande","Bitstream Vera Sans",Verdana,sans-serif; }
+
+div#header, div#site-title, div#messages{
+height:63px;
+vertical-align: bottom;
 }
 
 div#footer {
+  margin-top:50px;
+  height:80px;
   text-align: center;
+  clear:both;
+  background: #A2A2A2;
+}
+
+div#sidebar-left {
+  margin-top:1em;
+}
+
+div#five-random-words ul {
+}
+div#ive-random-words ul li {
+  margin-bottom:10px;
 }
 div#form {
   width:50%;
@@ -27,8 +44,12 @@ div#greetings {
 h1 {
   font-size:1.8em;
   color:#666;
-  margin:0.4em 0 0.2em 0;
   font:"Trebuchet MS", "Lucida Grande","Bitstream Vera Sans",Verdana,sans-serif;
+}
+
+h1 a {
+  color:#666;
+  text-decoration:none;
 }
 
 a.category{
@@ -38,36 +59,6 @@ a.category{
   padding:5px;
 }
 
-#wrapper {
-  text-align: left;
-  margin: 0px auto;
-  padding: 0px;
-  border:0;
-}
-
-#sidebar-left {
-  float: left;
-  padding:0 5px;
-  width: 150px;
-}
-div#wrapper{
-  float:left;
-}
-#sidebar-right {
-  float: right;
-  padding:0 5px;
-  width: 250px;
-}
-
-div#content { 
-  padding-left:5px;
-  padding-right: 260px;
-}
-
-div#footer {
-  clear: both;
-  background: #A2A2A2;
-}
 #word-image,#word-audio {
   margin: 3px;
   width:120px;
@@ -130,26 +121,6 @@ ul.pagelist{
   width:300px;
   margin: 0 auto;
 }
-#wordoftheday {
-  width:500px;
-  margin:0 auto;
-  text-align:center;
-  font-size:2em;
-}
-#wordoftheday em{
-  color:#555;
-  margin-left:-7em;
-}
-
-#wordoftheday span{
-  margin-left:auto;
-  margin-right:0;
-}
-
-#wordoftheday span a{
-  color:#000;
-}
-
 
 .blogposts table {
   margin-left:-100px;

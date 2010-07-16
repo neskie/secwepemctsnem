@@ -14,7 +14,7 @@ class LatestContentNode(Node):
         self.model = get_model(*model.split('.'))
     
     def render(self, context):
-        context[self.varname] = self.model._default_manager.all()[:self.num]
+        context[self.varname] = self.model._default_manager.all().order_by('-pub_date')[:self.num]
         return ''
  
 def get_latest(parser, token):

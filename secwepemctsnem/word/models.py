@@ -20,6 +20,8 @@ class AudioFile(models.Model):
     description = models.CharField(max_length=400)
     def __unicode__(self):
         return force_unicode(self.audiofile)
+    def get_absolute_url(self):
+        return "/words/audiofile/%d" % self.id
 
 class ImageFile(models.Model):
     imagefile = models.FileField(upload_to="files")
@@ -37,12 +39,17 @@ class Linguistic(models.Model):
 class Word(models.Model):
     secwepemc = models.CharField(max_length=40, help_text='A word in Secwepemctsin')
     english = models.CharField(max_length=40, help_text='The English word.')
-    dialect = models.CharField(max_length=40,
-            help_text='One of North,East, or West',
+    DIALECT_CHOICES = (
+            ('A', 'All'),
+            ('N', 'Northern'),
+            ('W', 'Western'),
+            ('E', 'Eastern'),
+            )
+    dialect = models.CharField(max_length=40,choices=DIALECT_CHOICES,
             blank=True)
     english = models.CharField(max_length=40,
             help_text='The English word.')
-    audiofile = models.ManyToManyField(AudioFile,blank=True,related_name='afiles')
+    audiofile = models.ManyToManyField(AudioFile,blank=True)
     imagefile = models.ManyToManyField(ImageFile,blank=True)
     pub_date = models.DateTimeField(default=datetime.now)
 
@@ -54,4 +61,6 @@ class Word(models.Model):
     def strip_accents(self):
         s = self.secwepemc
         return ''.join((c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn'))
+    def get_absolute_url(self):
+        return "/words/%d" % self.id
 

@@ -9,6 +9,7 @@ class AudioFileInline(admin.TabularInline):
     extra = 1
 
 class AudioFileAdmin(admin.ModelAdmin):
+    list_display = ['audiofile', 'pub_date', 'recorded_by']
     inlines = [
         AudioFileInline,
     ]
@@ -32,7 +33,7 @@ class WordAdmin(admin.ModelAdmin):
         AudioFileInline,
     ]
     search_fields = ('secwepemc', 'english')
-    list_display = ('secwepemc', 'english')
+    list_display = ('secwepemc', 'english', 'pub_date')
     related_search_fields = {
             'audiofile':('^audiofile',),
     }

@@ -26,6 +26,7 @@ from forms import *
 from django.conf import settings
 from django.utils.encoding import smart_unicode, smart_str, force_unicode
 import subprocess
+from django.views.generic.list_detail import *
 
 def recorder(request):
     '''This view allows the user to record audio fiels using the flash
@@ -144,10 +145,17 @@ def audio(request):
     })
     return HttpResponse(t.render(c))
 
-def jsonaudiofile(request,word_id):
-    data = serializers.serialize("json",
-            Word.objects.get(pk=word_id).audiofile.all())
-    return HttpResponse(data, mimetype="application/javascript")
+def audiofile_detail(request,audio_id, xspf=False):
+    import json
+    audiofiles = AudioFile.objects.all()
+    if xspf:
+        t = loader.get_template('word/audiofile_xspf.html')
+        c = RequestContext(request,{
+            'audiofile':  AudioFile.objects.get(pk=audio_id),
+            'xspf': xspf,
+        })
+        return HttpResponse(t.render(c))
+    return object_detail(request,audiofiles, audio_id)
 
 def audioplayer(request,audio_id):
     audiofile = AudioFile.objects.get(pk=audio_id)
@@ -177,16 +185,15 @@ def alphabet(request,letter):
     c = RequestContext(request,{
         'alphabet': alphabet,
         'words': words,
+        'letter': letter,
         'title': title,
-        'count': word_list.count()
-
     })
     return HttpResponse(t.render(c))
 
 def category_detail(request,cat_id):
     try:
         tag = Tag.objects.get(pk=cat_id)
-        title =tag.name
+        title = tag.name
         error = ''
     except Tag.DoesNotExist:
         tag = []
@@ -203,14 +210,16 @@ def category_detail(request,cat_id):
     return HttpResponse(t.render(c))
 
 
-def detail(request,word_id):
+def word_detail(request,word_id, xspf=False):
     word_type = ContentType.objects.get(app_label="word", model="word")
-    word = Word.objects.get(pk=word_id)
+    try:
+        word = Word.objects.get(pk=word_id)
+    except Word.DoesNotExist:
+        return HttpResponseRedirect('/search/') # Redirect after
     
-    flashfile = ''
-
     t = loader.get_template('word/word.html')
-    xspf = request.GET.get('xspf')
+    if not xspf:
+        xspf = request.GET.get('xspf')
     output = ''
     if xspf:
         t = loader.get_template('word/xspf.html')
@@ -223,11 +232,11 @@ def detail(request,word_id):
     else:
         c = RequestContext(request,{
             'word_obj': word,
-            'flashfile': flashfile,
             'word_type': word_type,
             'xspf': xspf,
         })
         return HttpResponse(t.render(c))
+
 def export(request):
     pass
 
@@ -287,11 +296,8 @@ def show_pdf(request,cat_id):
     return response
 
 def random_word(request):
-    data = Word.objects.order_by('?')[0]
-#    data = serializers.serialize('json',(data,))
     t = loader.get_template('word/random.html')
     c = RequestContext(request,{
-        'word': data,
     })
     return HttpResponse(t.render(c))
 

@@ -1,5 +1,6 @@
 <div class="blogposts">
-	{% for post in posts %}
-	{{post.summary|safe}}
-	{% endfor %}
+<!-- This is only good for google rss feed -->
+{% for post in posts %}
+{{post.summary|removetags:"table tr td div font img "|safe}}
+{% endfor %}
 </div>

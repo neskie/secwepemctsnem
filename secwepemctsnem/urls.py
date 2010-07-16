@@ -8,8 +8,6 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    (r'^$', direct_to_template, {"template" : "index.html"}),
-    (r'^about/$', direct_to_template, {"template" : "about.html"}),
     (r'^accounts/login/$', 'django.contrib.auth.views.login',{'template_name': 'accounts/login.html'}),
     (r'^logout/$', 'django.contrib.auth.views.logout',{'next_page':'/'}),
     (r'^accounts/profile/$', direct_to_template, {"template" : "accounts/profile.html"}),

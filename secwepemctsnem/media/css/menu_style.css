@@ -1,4 +1,4 @@
-ul#menu
+#menu ul
 {
 	margin:0;
 	padding:0;
@@ -11,11 +11,11 @@ ul#menu
 	font-weight:bold;
 	background:transparent url(/media/images/nav_bg.png) repeat-x top left;
 	font-family:Arial, Helvetica, sans-serif;
-	border-bottom:1px solid #000000;
 	border-top:1px solid #000000;
+  clear:both;
 }
 
-ul#menu li
+#menu ul li
 {
 	display:block;
 	float:left;
@@ -23,7 +23,7 @@ ul#menu li
 	padding:0;
 }
 	
-ul#menu li a
+#menu ul li a
 {
 	display:block;
 	float:left;
@@ -33,7 +33,7 @@ ul#menu li a
 	padding:8px 20px 0 20px;
 }
 	
-ul#menu li a:hover
+#menu ul li a:hover
 {	
 	color:#FFFFFF;
 	height:22px;
@@ -41,7 +41,7 @@ ul#menu li a:hover
 }
 	
 
-ul#menu li a.active
+#menu ul li a.active
 {
 	display:inline;
 	height:22px;
