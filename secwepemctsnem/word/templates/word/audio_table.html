@@ -1,5 +1,4 @@
 {% extends "word/index.html" %}
-
 {% load word_tags %}
 {% block scripts %}
 <script type="text/javascript" src="/media/js/jquery-min.js"></script> 
@@ -9,27 +8,23 @@
 {% block content %}
 <h2>{{title}}</h2>
 
-
+There are {{ words.paginator.count }} word{{ words.paginator.count|pluralize }} with audio attached to them.
 {% if words %}
 <table id="table-listing">
-	<tr>
-		<th>Secwepemc</th>
-		<th>English</th>
-		<th>Audio</th>
-	</tr>
-    {% for word in words.object_list %}
-    
+<tr>
+<th>Secwepemc</th>
+<th>English</th>
+<th>Audio</th>
+</tr>
+{% for word in words.object_list %}
     <tr class="{% cycle "odd" "even" %}">
-	    <td><a href="/words/{{word.id}}">{{ word.secwepemc }}</a> </td>
-	    <td><a href="/words/{{word.id}}">{{ word.english }}</a></td>
-	    <td>{% for a in word.audiofile.all %}
-		    <a href="/words/audioplayer/{{a.id}}/download"><img alt="Download" src="/media/images/download.png"/></a>
-<object type="application/x-shockwave-flash" width="17" height="17" data="http://language.secwepemcradio.ath.cx/media/xspf_player/button/musicplayer.swf?playlist_url=http://language.secwepemcradio.ath.cx/{% url word.views.detail word.id %}?xspf=1">
-<param name="movie" value="http://language.secwepemcradio.ath.cx/media/xspf_player/button/musicplayer.swf?playlist_url=http://language.secwepemcradio.ath.cx/{% url word.views.detail word.id %}?xspf=1" />
-<param name="wmode" value="transparent" />
-</object>
-    {% endfor %}
-	    </td>
+	<td><a href="{{word.get_absolute_url}}">{{ word.secwepemc }}</a></td>
+	<td><a href="{{word.get_absolute_url}}">{{ word.english }}</a></td>
+	<td>{% load render %}{% render_object word for "xspf-tiny" %}
+	    {% for a in word.audiofile.all %}
+	    <a href="{{MEDIA_URL}}{{a.audiofile}}"><img alt="Download" src="/media/images/download.png"/></a>
+	    {% endfor %}
+	</td>
     </tr>
     {% endfor %}
 </table>

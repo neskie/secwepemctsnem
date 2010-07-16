@@ -1,9 +1,8 @@
 {% extends "word/index.html" %}
 {% load word_tags %}
-
-
 {% block content %}
 <h2>{{title}}</h2>
+<p>There are {{ page_obj.paginator.count }} words.</p>
     <ul>
     {% for object in object_list %}
     <li><a href="/words/{{object.id}}">{{ object.secwepemc }}</a> - {{ object.english }}

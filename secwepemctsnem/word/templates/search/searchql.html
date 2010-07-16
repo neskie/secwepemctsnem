@@ -1,0 +1,61 @@
+{% extends 'search/search.html' %}
+{% load word_tags %}
+{% block content %}
+    <h2>Search</h2>
+
+    <form method="get" action="/words/search/">
+    <table> 
+            <tr>
+		    {%if query%}
+		    <td><input value='{{query}}' onblur="this.value='{{query}}'; setbg('#777');" onfocus="this.value='{{query}}'; setbg('#000')" type="text" name="q" id="id_q" ></input></td>
+
+{%else%}
+<td><input value='Search By English or Secwepemc Term' onblur="this.value='Search By English or Secwepemc Term'; setbg('#777');" onfocus="this.value=''; setbg('#000')" type="text" name="q" id="id_q" ></input></td>
+{%endif%}
+<td><input type="submit" value="Search"></input></td>
+</tr> 
+        </table> 
+
+        {% if query %}
+            <h3>Results</h3>
+	    We found {{words|length}} word{{words|length|pluralize}}
+
+	    <table class="word-search-results">
+	    <tr class="table-header">
+			<th>Secwepemc</th>
+			<th>English</th>
+			<th>K̓elélnem</th>
+		</tr>
+            {% for result in words %}
+	    <tr class="{%cycle 'odd' 'even' %}">
+			<td><a href="/words/{{ result.id }}">{{ result.secwepemc }}</a></td>
+			<td><a href="/words/{{ result.id }}">{{ result.english }}</a></td>
+			{%if result.audiofile.all %}
+			  <td>
+			  <div class="play-button" >
+			  {%for audio in result.audiofile.all%}
+<object type="application/x-shockwave-flash" width="17" height="17" data="http://language.secwepemcradio.ath.cx/media/xspf_player/button/musicplayer.swf?playlist_url=http://language.secwepemcradio.ath.cx/{% url word.views.detail result.id %}?xspf=1">
+<param name="movie" value="http://language.secwepemcradio.ath.cx/media/xspf_player/button/musicplayer.swf?playlist_url=http://language.secwepemcradio.ath.cx/{% url word.views.detail result.id %}?xspf=1" />
+<param name="wmode" value="transparent" />
+</object>
+		    	  {%endfor%}
+			  </div>
+</td>
+			  {%else%}
+			  {%if user.is_superuser or user.groups.all %}	
+			  <td><a href="/admin/word/audiofile/add/">+</a></td>
+			  {%else%}
+			  <td><a href="/accounts/login">Login</a></td>
+			  {%endif%}
+			  {%endif%}
+                </tr>
+            {% empty %}
+                <p>No results found.</p>
+                <p>You can use search terms like: app*.</p>
+            {% endfor %}
+	    </table>
+        {% else %}
+            {# Show some example queries to run, maybe query syntax, something else? #}
+        {% endif %}
+    </form>
+{% endblock %}

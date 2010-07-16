@@ -5,31 +5,20 @@
 {% include "search/search_block.html" %}
 <h2>Browse</h2>
 <ul>
-		<li><a href="/words">All</a></li>
-		<li><a href="/words/browse/alphabet">Alphabet</a></li>
-		<li><a href="/words/browse/audio">Audio</a></li>
-		<li><a href="/words/browse/category">Category</a></li>
+<li><a href="/words">All</a></li>
+<li><a href="/words/browse/alphabet">Alphabet</a></li>
+<li><a href="/words/browse/audio">Audio</a></li>
+<li><a href="/words/browse/category">Category</a></li>
 </ul>
-{% load cache %}
-{% cache 100 sidebar %}
-<h2> Five Random Words</h2>
-{% get_random word.Word 5 as recent_links %}
-{% for word in  recent_links %}
-<a href="/words/{{word.id}}">{{word}}</a>
-    {%if word.audiofile.all %} 
-    <img style="width:15px;" src="/media/images/iconspeaker.png" alt="Has
-    Audio"/><br/>
-    {%endif%}
-    {%endfor%}
-{% endcache %}
+
+{% include "word/random5.html" %}
+
 {% endblock %}
 
 {% block content %}
 <h2>{{title}}</h2>
-{%if count %}
-Count: {{count}}
-{% endif %}
-
+There are {{ words.paginator.count }} word{{ words.paginator.count|pluralize }}
+starting with {{ letter}}.
 {% if words %}
     <ul>
     {% for word in words.object_list %}

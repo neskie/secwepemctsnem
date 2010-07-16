@@ -10,17 +10,7 @@
 		<li><a href="/words/browse/category">Category</a></li>
 </ul>
 {% load cache %}
-{% cache 100 sidebar %}
-<h2> Five Random Words</h2>
-{% get_random word.Word 5 as recent_links %}
-{% for word in  recent_links %}
-<a href="/words/{{word.id}}">{{word}}</a>
-    {%if word.audiofile.all %} 
-    <img class="icon" src="/media/images/iconspeaker.png" alt="Has
-    Audio"/><br/>
-    {%endif%}
-    {%endfor%}
-{% endcache %}
+{% include "random5.html" %}
 {% endblock %}
 
 {% block content %}

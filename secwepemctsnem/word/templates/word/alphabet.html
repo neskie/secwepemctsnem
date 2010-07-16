@@ -7,11 +7,10 @@
 {% block content %}
 <h2>{{title}}</h2>
 
-
-<ul class="pagelist">
+<div style="margin:5px auto;width:500px;text-align:center;">
 {%for letter in alphabet %}
-<li><a href="alphabet/{{letter}}">{{letter}}</a></li>
+<a href="{% url word.views.alphabet letter%}">{{letter}}</a>{% if not forloop.last%} - {% endif %}
 {%endfor%}
-</ul>
+</div>
 
 {% endblock %}

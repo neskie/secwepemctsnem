@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}{{ flatpage.title }}{% endblock %}
+{% block content %}
+{% load markup %}
+{{ flatpage.content|textile }}
+{% endblock %}
+{% block sidebar-right%}
+{% include "search/search_block.html" %}
+<h2> State of Secwepemctsín </h2>
+<p>
+We have about 300 fluent speakers,
+We have 500 semi-fluent speakers, and about 800 in various stages of learing.
+According to First Voices.
+</p>
+
+<h2>Development</h2>
+We are currently in the development phase, and things will change quickly.
+If you have an issues.  You can submit them <a
+href="http://github.com/neskie/secwepemctsnem/issues">here</a>.  You
+can also read more on the <a
+href="http://wiki.github.com/neskie/secwepemctsnem/">wiki</a>.
+
+<h2>Releases</h2>
+We are currently in the development phase.
+
+{% endblock %}
+

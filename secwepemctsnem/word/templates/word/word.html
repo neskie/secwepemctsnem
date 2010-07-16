@@ -63,21 +63,8 @@ You can <a href="/words/recorder?word_id={{word_obj.id}}">record a word</a>.
 
 {% block content %}
 {% if word_obj %}
-
-<p>
-<b>{{word_obj}}</b> 
-<em>{{word_obj.english}}</em>
-</p>
-<br />
-{% for audio in word_obj.audiofile.all %}
-<object type="application/x-shockwave-flash" width="250" height="15" data="http://language.secwepemcradio.ath.cx/media/xspf_player/xspf_player_slim.swf?playlist_url=http://language.secwepemcradio.ath.cx/{% url word.views.detail word_obj.id %}?xspf=1">
-	<param name="player_title" value="Weytk">
-</object>
-<br />
-{%endfor%}
-{% for audio in word_obj.audiofile.all %}
-<a href="/media/{{audio.audiofile}}">Download</a>
-{%endfor%}
+{% load render %}
+{% render_object word_obj  %}
 
 {% else %}
 <p>No words are available.</p>

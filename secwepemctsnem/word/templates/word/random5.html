@@ -1,0 +1,14 @@
+{% load word_tags %}
+{% load cache %}
+{% cache 3600 random5words %}
+<h2> Five Random Words</h2>
+{% get_random word.Word 5 as recent_links %}
+<ul>
+{% for word in recent_links %}
+<li><a href="{{ word.get_absolute_url }}">{{word}}</a> -
+{{ word.english|truncatewords:"2"}}
+{%if word.audiofile.all %} <img style="width:15px;"
+src="/media/images/iconspeaker.png" alt="Has Audio"/><br/> {%endif%}</li>
+{%endfor%}
+</ul>
+{% endcache %}

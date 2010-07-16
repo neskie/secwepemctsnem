@@ -14,8 +14,7 @@ Registration will be coming soon so you can add your own words and sounds to thi
 <h2>Please correct the following error{{ form.errors|pluralize }}:</h2>
 {% endif %}
 
-<form method="post" action=".">
-
+<form method="post" action="/words/create">
 {{form.as_p}}
 <input type="submit" />
 </form>

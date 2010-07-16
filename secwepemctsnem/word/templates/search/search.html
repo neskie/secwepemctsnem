@@ -1,5 +1,6 @@
 {% extends 'word/index.html' %}
 {% load word_tags %}
+{% block title %}Search - Secwepemctsnem{% endblock %}
 
 {% block scripts %}
 <script type="text/javascript"> 
@@ -20,13 +21,9 @@ document.getElementById("id_q").style.color=color
 		<li><a href="/words/browse/category">Category</a></li>
 </ul>
 {% load cache %}
-{% cache 100 sidebar %}
-<h2> Five Random Words</h2>
-{% get_random word.Word 5 as recent_links %}
-{% for word in  recent_links %}
-<a href="/words/{{word.id}}">{{word}}</a><br />
-{%endfor%}
-{% endcache %}
+
+{% include "word/random5.html" %}
+
 {% endblock %}
 
 {% block content %}
@@ -64,8 +61,10 @@ document.getElementById("id_q").style.color=color
 			  <td>
 			  <div class="play-button" >
 			  {%for audio in result.object.audiofile.all%}
-<object type="application/x-shockwave-flash" width="17" height="17" data="http://language.secwepemcradio.ath.cx/media/xspf_player/button/musicplayer.swf?playlist_url=http://language.secwepemcradio.ath.cx/{% url word.views.detail result.object.id %}?xspf=1">
-<param name="movie" value="http://language.secwepemcradio.ath.cx/media/xspf_player/button/musicplayer.swf?playlist_url=http://language.secwepemcradio.ath.cx/{% url word.views.detail result.object.id %}?xspf=1" />
+<object type="application/x-shockwave-flash" width="17" height="17"
+	data="http://language.secwepemcradio.ath.cx/media/xspf_player/button/musicplayer.swf?playlist_url=http://language.secwepemcradio.ath.cx/{{word.get_absolute_url }}?xspf=1">
+<param name="movie"
+value="http://language.secwepemcradio.ath.cx/media/xspf_player/button/musicplayer.swf?playlist_url=http://language.secwepemcradio.ath.cx/{{ word.get_absolute_url }}?xspf=1" />
 <param name="wmode" value="transparent" />
 </object>
 		    	  {%endfor%}

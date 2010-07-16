@@ -62,7 +62,7 @@ The idea for recording audio from flash came from <a
 {% endblock %}
 
 {% block content %}
-<h3>Record <a href="{% url word.views.detail word.id %}" title="{{ word.english }}">{{ word.secwepemc }}</a> in Secwepemctsín</h3>
+<h3>Record <a href="{{ word.get_absolute_url }}" title="{{ word.english }}">{{ word.secwepemc }}</a> in Secwepemctsín</h3>
 Instead of recording an audio file and uploading it if you have a flash
 enabled browser and a microphone.  You can record a word right now and submit
 it.
