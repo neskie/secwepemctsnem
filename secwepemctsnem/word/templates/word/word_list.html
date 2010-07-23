@@ -1,12 +1,30 @@
 {% extends "word/index.html" %}
 {% load word_tags %}
 {% block content %}
+
+{% ifequal letter '' %}
+<h2>Browse by Alphabet</h2>
+{% else %}{% if dialects %}
+<h2>{{dialects }}</h2>
+{% else %}
 <h2>{{title}}</h2>
-<p>There are {{ page_obj.paginator.count }} words.</p>
+{% endif %}
+{% endifequal %}
+
+<div style="margin:5px auto;width:500px;text-align:center;">
+{%for letter in alphabet %}
+<a href="{% url word.views.alphabet letter%}">{{letter}}</a>{% if not forloop.last%} - {% endif %}
+{%endfor%}
+</div>
+
+<p>There are {{ page_obj.paginator.count }} word{{ page_obj.paginator.count|pluralize }}
+{% if letter %}starting with {{ letter}}{% endif %}
+
+</p>
     <ul>
     {% for object in object_list %}
-    <li><a href="/words/{{object.id}}">{{ object.secwepemc }}</a> - {{ object.english }}
-    {%if object.audiofile.all %} 
+    <li><a class="secwepemcword" href="/words/{{object.id}}">{{ object.secwepemc }}</a> - {{ object.english }}
+    {%if object.audiofile_set.all %} 
     <img style="width:15px;" src="/media/images/iconspeaker.png" alt="Has Audio"/>
     {%endif%}
     </li>

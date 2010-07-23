@@ -1,6 +1,6 @@
 from haystack import indexes
 from haystack.sites import site
-from models import Word
+from word.models import Word
 import datetime
 
 class WordIndex(indexes.SearchIndex):

@@ -1,5 +1,5 @@
 from django import forms
-from models import Word
+from word.models import Word
 import datetime
 import os
 from django.conf import settings

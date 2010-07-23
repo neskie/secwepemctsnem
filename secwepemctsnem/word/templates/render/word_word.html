@@ -1,25 +1,39 @@
-<h1>{{object}}</h1>
+<h1 class="secwepemcword">{{object}}</h1>
+{% if user.is_superuser %}
+<ul>
+	<li><a href="/admin/word/word/{{object.id}}">Edit</a></li>
+</ul>
+{% endif %}
 
 <div style="clear:both" class="grid_3 alpha"><b>English:</b></div>
 <div class="grid_5 omega">{{object.english}}</div>
 
 <div style="clear:both" class="grid_3 alpha"><b>Dialect:</b></div>
-<div class="grid_5 omega">{{object.dialect}}</div>
-{% if object.audiofile.all %}
+<div class="grid_5 omega">{{object.get_dialect_display}}</div>
+{% if object.audiofile_set.all %}
 {% load render %}
-<div class="grid_3 alpha">AudioFile</div>
+<div class="grid_3 alpha"><b>AudioFile:</b></div>
 <div class="grid_5 omega">
 {% render_object object for "xspf" %}
-{% for audio in object.audiofile.all %}
-{{audio.description }}
+{% for audio in object.audiofile_set.all %}
+{{audio.slug }}
 <a href="/media/{{audio.audiofile}}">Download</a>
 <a href="{{audio.get_absolute_url}}">link</a>
 {%endfor%}
 </div>
 {% else %}
-<div class="grid_3 alpha"><b>Suggestion</b></div>
+<div class="grid_3 alpha"><b>Suggestion:</b></div>
 <div class="grid_5 omega">
-Would you like to record a word?
+    Would you like to <a href="{% url audio.views.recorder object.id %}">record a
+        word</a>?
 </div>
-{% endif %}
+{% load tagging_tags %}
+{% tags_for_object object as wordtags %}
+<div class="grid_3 alpha"><b>Tags:</b></div>
+<div class="grid_5 omega">
+{%for category in wordtags %}
+<a  href="/words/browse/category/{{category.id}}">{{category}}</a>
+{%endfor%}
+</div>
 
+{% endif %}

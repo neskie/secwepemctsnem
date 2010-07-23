@@ -4,12 +4,11 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, Context, loader
 from word.models import *
 from django.core.paginator import Paginator
-from django.template.defaultfilters import slugify, urlize
+from django.template.defaultfilters import slugify, urlize, escape
 from django.core import serializers 
 import csv
 import mimetypes
 import os
-import codecs
 from cStringIO import StringIO
 from csvwriter import UnicodeWriter
 from reportlab.platypus.doctemplate import SimpleDocTemplate
@@ -19,7 +18,7 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
 from reportlab.pdfbase.pdfmetrics import registerFontFamily
 from django.contrib.contenttypes.models import ContentType
-from tagging.models import Tag
+from tagging.models import Tag, TaggedItem
 from django.views.decorators.cache import cache_page
 from django.core import serializers
 from forms import *
@@ -27,83 +26,7 @@ from django.conf import settings
 from django.utils.encoding import smart_unicode, smart_str, force_unicode
 import subprocess
 from django.views.generic.list_detail import *
-
-def recorder(request):
-    '''This view allows the user to record audio fiels using the flash
-    recorder to record a word that is already in the database.'''
-    if request.method == 'POST':
-        form = AudioRecorderForm(request.POST) # A form bound to the POST data
-        if form.is_valid(): # All validation rules pass
-            word_id = form.cleaned_data['word']
-            wordname = smart_unicode(form.cleaned_data['wordname'])
-            ip = form.cleaned_data['ip']
-            port = form.cleaned_data['port']
-            flashfile = u"%sfiles/flashfiles/%s_%s_%s.flv" % (settings.MEDIA_ROOT,
-                    form.cleaned_data['ip'],
-                    form.cleaned_data['port'],
-                    wordname)
-            #Write IP, Port, name to Log
-            #Check if there are already audiofiles with that wordname.
-            afiles = AudioFile.objects.filter(audiofile__contains="files/audiofiles/%s"%wordname)
-            #Now convert flashfile if it exists to an mp3.
-            if os.path.exists(flashfile.encode('utf-8')):
-                afile = "%sfiles/audiofiles/%s_%d.mp3" %(
-                        settings.MEDIA_ROOT,
-                    wordname,
-                    len(afiles),
-                    )
-                subprocess.Popen(['/usr/bin/ffmpeg', '-y', '-i',
-                    flashfile.encode('utf-8'), afile.encode('utf-8')]) 
-                a = AudioFile(
-                        audiofile='files/audiofiles/%s_%d.mp3'%(smart_str(wordname),len(afiles)),
-                        description="IP:%s"%form.cleaned_data['ip'],
-                        )
-                a.save()
-                word_id.audiofile.add(a)
-
-                word_id = request.GET.get('word_id')
-                return HttpResponseRedirect('/words/%s'%word_id) # Redirect after
-        word_id = request.GET.get('word_id')
-        c = RequestContext(request,{
-            'word': Word.objects.get(pk=word_id),
-            'filename': wordname,
-            'ip': ip,
-            'port': port,
-            'form': form,
-            'root': flashfile,
-            'title': 'Record Some Words',
-        })
-
-        t = loader.get_template('word/recorder.html')
-
-        return HttpResponse(t.render(c))
-
-    else:
-        word_id = request.GET.get('word_id')
-        ip = request.META['REMOTE_ADDR']
-        port = request.META['REMOTE_PORT']
-        '''If the word doesn't exist offer to create it'''
-        try:
-            word= Word.objects.get(pk=word_id)
-        except Word.DoesNotExist:
-            return HttpResponseRedirect("/words/create/")
-
-        #Return a bounded form, because the word needs to exist in the database.
-        form = AudioRecorderForm(dict(ip=ip,word=word.id,wordname=word.secwepemc,port=port))
-        flashfile = "%sfiles/flashfiles/%s_%s_%s.flv" % (settings.MEDIA_ROOT, ip,port, word.secwepemc)
-        c = RequestContext(request,{
-            'word': word,
-            'filename': word.secwepemc,
-            'ip': ip,
-            'port': port,
-            'form': form,
-            'root': flashfile,
-            'title': 'Record Some Words',
-        })
-
-        t = loader.get_template('word/recorder.html')
-
-        return HttpResponse(t.render(c))
+from django.contrib.auth.decorators import login_required
 
 def show_excel(request,cat_id):
     # use a StringIO buffer rather than opening a file
@@ -123,134 +46,59 @@ def show_excel(request,cat_id):
 
 def audio(request):
     word_list = Word.objects.filter(audiofile__isnull=False)
-    paginator = Paginator(word_list, 10) # Show 25 contacts per page
-
-    # Make sure page request is an int. If not, deliver first page.
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
-
-    # If page request (9999) is out of range, deliver last page of results.
-    try:
-        words = paginator.page(page)
-    except (EmptyPage, InvalidPage):
-        words = paginator.page(paginator.num_pages)
 
     t = loader.get_template('word/audio_table.html')
-    c = RequestContext(request,{
-        'words': words,
+    c = ({
         'title': 'Audio',
 
     })
-    return HttpResponse(t.render(c))
-
-def audiofile_detail(request,audio_id, xspf=False):
-    import json
-    audiofiles = AudioFile.objects.all()
-    if xspf:
-        t = loader.get_template('word/audiofile_xspf.html')
-        c = RequestContext(request,{
-            'audiofile':  AudioFile.objects.get(pk=audio_id),
-            'xspf': xspf,
-        })
-        return HttpResponse(t.render(c))
-    return object_detail(request,audiofiles, audio_id)
-
-def audioplayer(request,audio_id):
-    audiofile = AudioFile.objects.get(pk=audio_id)
-    t = loader.get_template('word/audioplayer.html')
-    c = RequestContext(request,{
-        'audiofile': audiofile,
-    })
-    return HttpResponse(t.render(c))
+    return object_list(request,word_list,extra_context=c,template_name='word/audio_table.html')
 
 def alphabet(request,letter):
-    word_list = Word.objects.filter(secwepemc__startswith=letter)
-    paginator = Paginator(word_list, 10) # Show 25 contacts per page
+    '''Gets a wordlsit of all the words that start with a letter '''
+    alphabet = u'aceghiklmnopqrstuwxyáéíóú'
+    words = Word.objects.none()
+    if letter != '':
+        words = Word.objects.filter(secwepemc__istartswith=letter)
 
-    # Make sure page request is an int. If not, deliver first page.
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
-
-    # If page request (9999) is out of range, deliver last page of results.
-    try:
-        words = paginator.page(page)
-    except (EmptyPage, InvalidPage):
-        words = paginator.page(paginator.num_pages)
     title = 'Words Starting with %s'%(letter)
     t = loader.get_template('word/index.html')
-    c = RequestContext(request,{
+    c = {
         'alphabet': alphabet,
-        'words': words,
         'letter': letter,
         'title': title,
-    })
-    return HttpResponse(t.render(c))
+    }
+    return object_list(request, words,extra_context=c,paginate_by=10)
+
+def dialect(request,dialect):
+    '''Gets a wordlsit of all the words that start with a letter '''
+    words = Word.objects.none()
+    if dialect != '':
+        words = Word.objects.filter(dialect=dialect[0])
+
+    title = 'Words from the %s'%(dialect)
+    t = loader.get_template('word/index.html')
+    c = {
+        'dialects': dict(Word.DIALECT_CHOICES)[dialect[0]],
+        'title': title,
+    }
+    return object_list(request, words,extra_context=c,paginate_by=10)
 
 def category_detail(request,cat_id):
-    try:
-        tag = Tag.objects.get(pk=cat_id)
-        title = tag.name
-        error = ''
-    except Tag.DoesNotExist:
-        tag = []
-        title = ''
-        error = "That tag doesn't exist."
-
-    t = loader.get_template('word/category_list.html')
-    c = RequestContext(request,{
-        'tag': tag,
-        'error': error,
-        'request_detail':'category_detail',
-        'title': '%s'%title,
-    })
-    return HttpResponse(t.render(c))
-
+    tag = Tag.objects.get(pk=cat_id)
+    taggeditems = TaggedItem.objects.filter(tag=tag).values_list('object_id',flat=True)
+    words = Word.objects.filter(id__in=taggeditems)
+    c = {
+        'title': '%s'%tag.name,
+    }
+    return object_list(request, words,extra_context=c,paginate_by=10)
 
 def word_detail(request,word_id, xspf=False):
-    word_type = ContentType.objects.get(app_label="word", model="word")
-    try:
-        word = Word.objects.get(pk=word_id)
-    except Word.DoesNotExist:
-        return HttpResponseRedirect('/search/') # Redirect after
-    
-    t = loader.get_template('word/word.html')
-    if not xspf:
-        xspf = request.GET.get('xspf')
-    output = ''
+    words = Word.objects.all()
     if xspf:
-        t = loader.get_template('word/xspf.html')
-        c = RequestContext(request,{
-            'word': word,
-            'word_type': word_type,
-            'xspf': xspf,
-        })
-        return HttpResponse(t.render(c))
-    else:
-        c = RequestContext(request,{
-            'word_obj': word,
-            'word_type': word_type,
-            'xspf': xspf,
-        })
-        return HttpResponse(t.render(c))
-
-def export(request):
-    pass
-
-def download_view(request, audio_id):
-    audiofile = AudioFile.objects.get(pk=audio_id)
-    filename = str(audiofile)
-    filename = '/srv/apache/static/media/'+filename
-    file = open(filename,"r")
-    mimetype = mimetypes.guess_type(filename)[0]
-    if not mimetype: mimetype = "application/octet-stream"
-
-    response = HttpResponse(file.read(), mimetype=mimetype)
-    response["Content-Disposition"]= "attachment; filename=%s" % os.path.split(filename)[1]
-    return response
+        return object_detail(request, words,object_id=word_id,
+                template_name='word/word_xspf.html')
+    return object_detail(request, words,object_id=word_id)
 
 def show_pdf(request,cat_id):
     tag = Tag.objects.get(pk=cat_id)
@@ -304,10 +152,11 @@ def random_word(request):
 def search(request):
     from django.db import connection, transaction
     query = request.GET.get('q')
+    query = escape(query)
     if query:
         cursor = connection.cursor()
-        cursor.execute("SELECT word_id FROM word_search WHERE body MATCH '%s'" %
-                query)
+        cursor.execute("SELECT word_id FROM word_search WHERE body MATCH %s",
+                [query])
         results = [ x[0] for x in  cursor.fetchall()]
         words = Word.objects.filter(id__in=results)
         del results
@@ -322,4 +171,3 @@ def search(request):
 
     t = loader.get_template('search/searchql.html')
     return HttpResponse(t.render(c))
-

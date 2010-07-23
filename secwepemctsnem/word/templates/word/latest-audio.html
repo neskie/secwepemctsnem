@@ -1,15 +1,13 @@
 {% load word_tags %}
 {% load cache %}
-{% load render %}
 <h2>Latest Audio</h2>
-{% get_latest word.AudioFile 5 as recent_links %}
+{% get_latest audio.AudioFile 5 as recent_links %}
 <ul>
 {% for audiofile in recent_links %}
 <li>
-{% for word in audiofile.word_set.all.distinct %}
-<a href="{{ audiofile.get_absolute_url }}">{{ word }}</a>
-{% render_object audiofile for "xspf-tiny" %}
-{% endfor %} - {{ audiofile.recorded_by }}</li>
+<a href="{{ audiofile.get_absolute_url }}"> {{audiofile.secwepemc}} </a>
 
+{%if audio.audiofile.all %} <img style="width:15px;"
+src="/media/images/iconspeaker.png" alt="Has Audio"/><br/> {%endif%} - {{ audiofile.recorded_by }}</li>
 {%endfor%} 
 </ul>

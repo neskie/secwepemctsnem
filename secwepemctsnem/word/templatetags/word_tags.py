@@ -3,7 +3,8 @@ from django.template.defaultfilters import stringfilter
 from django.db.models import get_model
 from django.utils.safestring import mark_safe
 
-from word.models import Word
+from word.models import *
+from audio.models import *
 import random
      
 register = Library()

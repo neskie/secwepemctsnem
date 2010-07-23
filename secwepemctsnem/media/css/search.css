@@ -14,7 +14,10 @@ table.word-search-results {
 }
 table.word-search-results tr, table.word-search-results tr td{
   font-family: "Aboriginal Sans";
-  font-size:13px;
+  font-size: 1.1em;
+}
+table.word-search-results td.last{
+  text-align: center
 }
 
 table#search-block {

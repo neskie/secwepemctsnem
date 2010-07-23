@@ -30,22 +30,20 @@
 	    <tr class="{%cycle 'odd' 'even' %}">
 			<td><a href="/words/{{ result.id }}">{{ result.secwepemc }}</a></td>
 			<td><a href="/words/{{ result.id }}">{{ result.english }}</a></td>
-			{%if result.audiofile.all %}
+			{%if result.audiofile_set.all %}
 			  <td>
 			  <div class="play-button" >
-			  {%for audio in result.audiofile.all%}
-<object type="application/x-shockwave-flash" width="17" height="17" data="http://language.secwepemcradio.ath.cx/media/xspf_player/button/musicplayer.swf?playlist_url=http://language.secwepemcradio.ath.cx/{% url word.views.detail result.id %}?xspf=1">
-<param name="movie" value="http://language.secwepemcradio.ath.cx/media/xspf_player/button/musicplayer.swf?playlist_url=http://language.secwepemcradio.ath.cx/{% url word.views.detail result.id %}?xspf=1" />
-<param name="wmode" value="transparent" />
-</object>
+			  {%for audio in result.audiofile_set.all%}
+			  {% load render %}
+			  {% render_object audio for "xspf-tiny" %}
 		    	  {%endfor%}
 			  </div>
-</td>
+	  		</td>
 			  {%else%}
 			  {%if user.is_superuser or user.groups.all %}	
-			  <td><a href="/admin/word/audiofile/add/">+</a></td>
+			  <td class="last"><a href="{% url audio.views.recorder result.id %}">+</a></td>
 			  {%else%}
-			  <td><a href="/accounts/login">Login</a></td>
+			  <td class="last"><a href="{% url django.contrib.auth.views.login %}">Login</a></td>
 			  {%endif%}
 			  {%endif%}
                 </tr>

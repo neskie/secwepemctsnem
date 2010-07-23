@@ -35,6 +35,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
 )
 
 ROOT_URLCONF = 'secwepemctsnem.urls'
@@ -53,11 +54,17 @@ INSTALLED_APPS = (
     'django.contrib.flatpages',
     'django.contrib.markup',
     'django_extensions',
+    'profiles',
+    'registration',
     'word',
     'haystack',
     'tagging',
     'lib',
+    'audio',
+    'accounts',
+    'invitation',
 )
+
 TEMPLATE_CONTEXT_PROCESSORS = ("django.contrib.auth.context_processors.auth",
             "django.core.context_processors.debug",
             "django.core.context_processors.i18n",
@@ -76,3 +83,6 @@ HAYSTACK_SOLR_URL = 'http://127.0.0.1:8983/solr'
 
 # Cache Options - create a cache table.
 CACHE_BACKEND = 'db://django_cache'
+AUTH_PROFILE_MODULE = 'accounts.UserProfile'
+ACCOUNT_ACTIVATION_DAYS = 5
+

@@ -1,44 +1,29 @@
-from word.models import Word
-from word.models import Linguistic
-from word.models import AudioFile
-from word.models import ImageFile
+from word.models import *
+from audio.models import AudioFile
 from django.contrib import admin
 
-class AudioFileInline(admin.TabularInline):
-    model = Word.audiofile.through
+class EnglishWordInline(admin.TabularInline):
+    model = EnglishWord
+    extra = 3
+class NotesInline(admin.TabularInline):
+    model = Notes
     extra = 1
 
 class AudioFileAdmin(admin.ModelAdmin):
     list_display = ['audiofile', 'pub_date', 'recorded_by']
-    inlines = [
-        AudioFileInline,
-    ]
 
-class ImageFileInline(admin.TabularInline):
-    model = Word.imagefile.through
-    extra = 1
+class EnglishWordAdmin(admin.ModelAdmin):
+    search_fields = ('english', 'secwepemc__secwepemc')
 
-class ImageFileAdmin(admin.ModelAdmin):
-    inlines = [
-        ImageFileInline,
-    ]
+    list_display = ('secwepemc', 'english',)
 
 class WordAdmin(admin.ModelAdmin):
-    fieldsets = (
-        (None, {
-            'fields': ('secwepemc','audiofile', 'english', 'dialect')
-        }),
-    )
     inlines = [
-        AudioFileInline,
+        EnglishWordInline, NotesInline,
     ]
-    search_fields = ('secwepemc', 'english')
+    search_fields = ('secwepemc', )
     list_display = ('secwepemc', 'english', 'pub_date')
-    related_search_fields = {
-            'audiofile':('^audiofile',),
-    }
 
 admin.site.register(Word,WordAdmin)
+admin.site.register(EnglishWord,EnglishWordAdmin)
 admin.site.register(AudioFile,AudioFileAdmin)
-admin.site.register(ImageFile,ImageFileAdmin)
-admin.site.register(Linguistic)

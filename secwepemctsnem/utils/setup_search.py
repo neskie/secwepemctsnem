@@ -13,14 +13,11 @@ from word.models import *
 
 
 cursor = connection.cursor()
-
+#CREATE VIRTUAL TABLE word_search USING FTS3(word, body);
 words = Word.objects.all()
 for word in words:
-    hasaudio = 'has:noaudio'
-    if word.audiofile.all():
-        hasaudio = "has:audio"
-    txt = '%s %s %s' % (word.strip_accents(), word.english, hasaudio )
-    # txt should be stripped from HTML, stop words etc. to get smaller size of the database
+    txt = " ".join([ word.strip_accents() ] + list(
+        word.englishword_set.all().values_list('english',flat=True)))
     cursor.execute("INSERT INTO word_search (word_id, body) VALUES (%s, %s)", (word.id, txt))
 
 transaction.commit_unless_managed()

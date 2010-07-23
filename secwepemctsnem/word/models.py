@@ -1,66 +1,56 @@
 from django.db import models
+from django.utils.encoding import smart_unicode, smart_str, force_unicode
 from django.contrib.auth.models import User,Group
-from django.core.cache import cache
-from django.utils import encoding
-from django.template.defaultfilters import date as datefilter
-from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.models import User
-from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes import generic
 from datetime import datetime
-from django.utils.encoding import force_unicode
-import tagging
 import unicodedata
-from datetime import datetime
 
-class AudioFile(models.Model):
-    audiofile = models.FileField(upload_to="files")
-    recorded_by = models.CharField(max_length=100,blank=True)
-    pub_date = models.DateTimeField(default=datetime.now())
-    description = models.CharField(max_length=400)
-    def __unicode__(self):
-        return force_unicode(self.audiofile)
-    def get_absolute_url(self):
-        return "/words/audiofile/%d" % self.id
-
-class ImageFile(models.Model):
-    imagefile = models.FileField(upload_to="files")
-    recorded_by = models.CharField(max_length=100,blank=True)
-    pub_date = models.DateTimeField(default=datetime.now())
-    description = models.CharField(max_length=400)
-    def __unicode__(self):
-        return self.description
-
-class Linguistic(models.Model):
-    partofspeech = models.CharField(max_length=40)
+class PartOfSpeech(models.Model):    
+    partofspeech = models.CharField(max_length=40, unique=True, help_text='Part of Speech.')
     def __unicode__(self):
         return self.partofspeech
 
 class Word(models.Model):
-    secwepemc = models.CharField(max_length=40, help_text='A word in Secwepemctsin')
-    english = models.CharField(max_length=40, help_text='The English word.')
+    secwepemc = models.CharField(max_length=50, unique=True, help_text='A word in Secwepemctsin')
     DIALECT_CHOICES = (
             ('A', 'All'),
             ('N', 'Northern'),
             ('W', 'Western'),
             ('E', 'Eastern'),
-            )
-    dialect = models.CharField(max_length=40,choices=DIALECT_CHOICES,
-            blank=True)
-    english = models.CharField(max_length=40,
-            help_text='The English word.')
-    audiofile = models.ManyToManyField(AudioFile,blank=True)
-    imagefile = models.ManyToManyField(ImageFile,blank=True)
-    pub_date = models.DateTimeField(default=datetime.now)
+    )
+    dialect = models.CharField(max_length=2,choices=DIALECT_CHOICES,
+            blank=True,default='A', help_text='The Secwepemc Dialect that this word/spelling is from.')
+    pub_date = models.DateTimeField(default=datetime.now())
+    submitted_by = models.ForeignKey(User)
+    part_of_speech = models.ForeignKey(PartOfSpeech)
 
     def __unicode__(self):
-        return self.secwepemc
-    def list_audiofiles(self):
-        text = 'hello'
-        return text
+        return force_unicode(self.secwepemc)
     def strip_accents(self):
         s = self.secwepemc
         return ''.join((c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn'))
     def get_absolute_url(self):
         return "/words/%d" % self.id
+    def english(self):
+        if self.englishword_set.count == 0:
+            return ""
+        if self.englishword_set.count == 1:
+            return self.englishword_set.all()[0].english
+        if self.englishword_set.count > 1:
+            return ", ".join(self.englishword_set.all().values_list('english', flat=True))
 
+class EnglishWord(models.Model):    
+    english = models.CharField(max_length=40, help_text='The English word.')
+    secwepemc = models.ForeignKey(Word)
+    class Meta:
+        unique_together = ('english', 'secwepemc')
+
+class MetaData(models.Model):    
+    url = models.URLField(help_text='Original location of word on Internet.')
+    source = models.CharField(max_length=200)
+    secwepemc = models.ForeignKey(Word)
+
+class Notes(models.Model):
+    text = models.TextField(max_length=400, unique=True,
+       help_text='Notes about a secwepemc word')
+    secwepemc = models.ForeignKey(Word)
+    submitted_by = models.ForeignKey(User)

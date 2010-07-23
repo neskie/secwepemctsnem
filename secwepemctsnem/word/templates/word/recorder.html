@@ -69,14 +69,15 @@ it.
 
 <div style="width:590px;">
 <fieldset>
-	<legend>Click on LOAD to start recording. Once you're done, wait a few
-	seconds and click submit.</legend> 
+<legend>Click on LOAD to start recording. Once you're done, wait a few
+seconds and click submit.</legend> 
 <div id="recorderDIVHolder" style="width:385;margin:0 auto;">
 <span class="link" id="recorderDIV" onclick="createRecorder(this.id, 'rtmp://secwepemcradio.ath.cx/oflaDemo')">LOAD</span>
 </div>
 </fieldset>
 </div>
-<form action="{% url word.views.recorder %}?word_id={{word.id}}" method="post">
+<form action="{% url audio.views.recorder word.id %}" method="post">
+	{%csrf_token %}
 <table>
 {{ form }}
 <tr><td><input type="submit" value="Submit" /></td></tr>

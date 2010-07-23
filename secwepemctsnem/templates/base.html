@@ -58,7 +58,11 @@
         <li><a href="/accounts/login">Login</a></li>
         {%endif %}
         {% if user.is_authenticated %}
-        <li><a href="/accounts/profile">{{ user|title }}</a></li>
+        {% if user.get_profile %}
+        <li><a href="/accounts/profile/{{user.username }}">{% firstof user.get_full_name user %}</a></li>
+        {%else %}
+        <li><a href="/accounts/profile/create">{% firstof user.get_full_name user %}</a></li>
+        {%endif %}
         <li><a href="/logout">Logout</a></li>
         {%endif %}
     </ul>
