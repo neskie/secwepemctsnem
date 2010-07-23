@@ -1,0 +1,7 @@
+You have been invited to a new language site
+
+You can go here to register:
+
+http://{{ site }}{% url invitation.views.register invitation.key %}
+
+It will expire after {{expiration_days}} day{{expiration_days|pluralize}}

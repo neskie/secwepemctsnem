@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content%}
+<h1>Invite a Friend</h1>
+<p>You have {{user.get_profile.get_invitation_stats.available }}
+invitation{{ user.get_profile.get_invitation_stats.available|pluralize }}
+left.</p>
+<div class=grid_4 alpha>
+	<form action="" method="POST"
+		{% csrf_token %}
+{{ form }}
+<input type="submit" value="invite" />
+
+</form>
+</div>
+{% endblock %}

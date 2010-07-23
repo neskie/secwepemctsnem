@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block sidebar-right%}
+{% include "search/search_block.html" %}
+<ul>
+<li><a href="../">User Profiles</a></li>
+<li><a href="{% url profiles_edit_profile %}">Edit Your Profile</a></li>
+<li><a href="{% url invitation_invite %}">Invite Someone</a></li>
+<li><a href="{% url django.contrib.auth.views.password_change %}">Change Password</a>
+<ul/>
+
+{% endblock %}
+
+{% block content %}
+<h1>{{ profile.user.get_full_name }}</h1>
+
+<div class="grid_2 alpha">Url:</div><div class="grid_6 omega">{{profile.url|urlize}}</div>
+<div class="grid_2 alpha">Address:</div><div class="grid_6 omega">{{profile.home_address}}</div>
+<div class="grid_2 alpha">Phone:</div><div class="grid_6 omega">{{profile.phone_number}}</div>
+{% load render%}
+{% endblock %}

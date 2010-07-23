@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block meta %}
+{% endblock %}
+
+{% block sidebar-right %}
+{% include "search/search_block.html" %}
+<b>Tags</b>
+{% if user.is_superuser %}
+<a  href="/admin/tagging/taggeditem/add?object_id={{word_obj.id}}&content_type={{word_type.id}}">+</a><br />
+{% endif %}
+</p>
+{% endblock %}
+
+{% block content %}
+<h1>{{ object.slug }}</h1>
+<div class="grid_3 alpha"> Recorded By: </div>
+<div clas="grid_5 omega"> {{object.recorded_by}} </div>
+<div class="grid_3 alpha"> Word: </div>
+<div clas="grid_5 omega"> <a href="{{ object.secwepemc.get_absolute_url }}">{{object.secwepemc}}</a> </div>
+<div class="grid_3 alpha"> Audiofile.  </div>
+<div clas="grid_5 omega">
+{% load render %}
+{% render_object object for "xspf" %}
+<a href="{{ MEDIA_URL }}{{object.audiofile}}">Download</a>
+</div>
+{% endblock %}

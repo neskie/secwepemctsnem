@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content%}
+You've been invited.
+<a href="invite/">invite</a>
+	<a href="invite/complete/">compliete</a>
+	<a href="invite/unavailable/">unavailable</a>
+		<a href="accept/complete/">complete</a>
+			<a
+				href="accept/(?P<invitation_key>\w+)/$">accept</a>
+{% endblock %}

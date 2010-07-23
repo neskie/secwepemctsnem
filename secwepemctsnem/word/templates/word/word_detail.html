@@ -1,0 +1,14 @@
+{% extends "word/word_list.html" %}
+{% block scripts %}
+{% endblock %}
+
+{% block content %}
+{% if object %}
+{% load render %}
+{% render_object object  %}
+
+{% else %}
+<p>No words are available.</p>
+{% endif %}
+
+{% endblock %}

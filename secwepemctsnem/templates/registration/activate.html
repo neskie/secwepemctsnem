@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block sidebar-right%}
+{% include "search/search_block.html" %}
+{% include "word/random5.html" %}
+{% endblock %}
+
+{% block content %}
+<h2>Registration Activation Failed</h2>
+
+The activation key {{ activation_key }} used during the activation attempt
+failed.
+
+{% endblock %}

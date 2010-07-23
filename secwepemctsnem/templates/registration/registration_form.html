@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block sidebar-right%}
+{% include "search/search_block.html" %}
+<h2>Registration</h2>
+<p>Coming Soon. In the meantime e-mail neskiem (at) gmail (dot) com</p>
+{% include "word/random5.html" %}
+{% endblock %}
+
+{% block content %}
+<h2>Registration</h2>
+{% if form.errors %}
+<p>Your username and password didn't match. Please try again.</p>
+{% endif %}
+
+<div id="login-form">
+<form method="post" action="/accounts/register/">{% csrf_token %}
+	<table>
+		{{form}}
+</table>
+
+
+<input type="submit" value="login" />
+<input type="hidden" name="next" value="{{ next }}" />
+</form>
+</div>
+
+{% endblock %}

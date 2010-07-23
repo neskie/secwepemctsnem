@@ -1,0 +1,4 @@
+<li><a class="secwepemcword" href="{{ word.get_absolute_url }}">{{word}}</a> -
+{{ word.english|truncatewords:"2"}}
+{%if word.audiofile.all %} <img style="width:15px;"
+src="/media/images/iconspeaker.png" alt="Has Audio"/><br/> {%endif%}</li>

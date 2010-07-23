@@ -1,0 +1,12 @@
+{% extends "profiles/base.html" %}
+
+{% block content %}
+<h1>Edit {{user}} profile</h1>
+<table>
+	<form action="{% url profiles_edit_profile %}" method="POST">
+		{% csrf_token %}
+{{form}}
+<tr><td></td><td><input type="submit" text="submit" /></td></tr>
+</form>
+</table>
+{% endblock %}

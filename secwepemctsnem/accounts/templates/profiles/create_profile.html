@@ -1,0 +1,12 @@
+{% extends "profiles/profile_detail.html" %}
+
+{% block content %}
+<h1>Tell us about yourself</h1>
+<table>
+<form action="{% url profiles_create_profile %}" method="POST">
+{% csrf_token %}
+{{form}}
+<tr><td></td><td><input type="submit" text="submit" /></td></tr>
+</form>
+</table>
+{% endblock %}

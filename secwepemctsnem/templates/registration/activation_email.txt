@@ -1,0 +1,11 @@
+Here is your activation_key
+
+{{ activation_key }}
+
+The number of days remaining during which the account may be activated.
+
+{{ expiration_days }}
+
+Please go to the following url to complete your registration.
+
+http://{{site}}/accounts/activate/{{activation_key}}/
