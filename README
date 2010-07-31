@@ -6,7 +6,7 @@ Modules
 
 
  * django-haystack (http://haystacksearch.org/)
- * solr (
+ * solr
  * pysolr
  * sqlite3
  * django-tagging
