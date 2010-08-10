@@ -36,7 +36,7 @@ def show_excel(request,cat_id):
     w = UnicodeWriter(output)
     for id in word_ids:
         word = Word.objects.get(pk=id['object_id'])
-        row = [(word.secwepemc),(word.english)]
+        row = [word.secwepemc, word.english()]
         w.writerow(row)
     # rewind the virtual file
     output.seek(0)
