@@ -152,7 +152,6 @@ def random_word(request):
 def search(request):
     from django.db import connection, transaction
     query = request.GET.get('q')
-    query = escape(query)
     if query:
         cursor = connection.cursor()
         cursor.execute("SELECT word_id FROM word_search WHERE body MATCH %s",
