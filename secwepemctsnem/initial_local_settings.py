@@ -1,8 +1,8 @@
 # Django settings for secwepemctsnem project.
 import os
 from local_settings import *
-
-PROJECT_ROOT = os.path.realpath(os.path.dirname(__file__)
+DEBUG = True
+PROJECT_ROOT = os.path.realpath(os.path.dirname(__file__))
 
 STATIC_DOC_ROOT = os.path.join(PROJECT_ROOT, '/media/')
 
