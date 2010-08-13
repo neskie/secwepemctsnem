@@ -15,7 +15,7 @@ LANGUAGE_CODE = 'en-us'
 SITE_ID = 1
 USE_I18N = True
 
-MEDIA_ROOT = STATIC_DOC_ROOT
+MEDIA_ROOT = os.path.join(PROJ_ROOT, 'media/')
 MEDIA_URL = 'http://cmeye.local:8000/media/'
 ADMIN_MEDIA_PREFIX = '/media/admin/'
 
@@ -40,7 +40,7 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'secwepemctsnem.urls'
 
 TEMPLATE_DIRS = (
-    os.path.join(PROJECT_ROOT, 'templates/')
+    os.path.join(PROJ_ROOT, 'templates/')
 )
 
 INSTALLED_APPS = (
