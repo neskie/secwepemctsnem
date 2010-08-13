@@ -3,7 +3,6 @@ import os
 from local_settings import *
 
 TEMPLATE_DEBUG = DEBUG
-STATIC_DOC_ROOT = PROJ_ROOT + '/media/'
 
 ADMINS = (
      ('Neskie Manuel', 'neskiem@gmail.com'),
@@ -41,7 +40,7 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'secwepemctsnem.urls'
 
 TEMPLATE_DIRS = (
-    PROJ_ROOT + '/templates/'
+    os.path.join(PROJECT_ROOT, 'templates/')
 )
 
 INSTALLED_APPS = (
