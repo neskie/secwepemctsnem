@@ -16,7 +16,7 @@ SITE_ID = 1
 USE_I18N = True
 
 MEDIA_ROOT = os.path.join(PROJ_ROOT, 'media/')
-MEDIA_URL = 'http://cmeye.local:8000/media/'
+MEDIA_URL = 'http://language.secwepemcradio.ath.cx/media/'
 ADMIN_MEDIA_PREFIX = '/media/admin/'
 
 # Make this unique, and don't share it with anybody.
