@@ -27,13 +27,19 @@
     Would you like to <a href="{% url audio.views.recorder object.id %}">record a
         word</a>?
 </div>
-{% load tagging_tags %}
-{% tags_for_object object as wordtags %}
+{% endif %}
 <div class="grid_3 alpha"><b>Tags:</b></div>
 <div class="grid_5 omega">
-{%for category in wordtags %}
-<a  href="/words/browse/category/{{category.id}}">{{category}}</a>
+{%for category in tags %}
+<a href="/words/browse/category/{{category.tag.id}}">{{category.tag}}</a>
+{% if user.is_staff %}
+<a href="/admin/tagging/taggeditem/{{category.id}}/delete/" target="_blank">X</a>
+{% endif %}
 {%endfor%}
+{% if user.is_staff %}
+<a
+	href="/admin/tagging/taggeditem/add/?object_id={{object.id}}&content_type=10"
+	target="_blank">add a tag</a>
+{% endif %}
 </div>
 
-{% endif %}

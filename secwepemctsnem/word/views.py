@@ -95,10 +95,13 @@ def category_detail(request,cat_id):
 
 def word_detail(request,word_id, xspf=False):
     words = Word.objects.all()
+    tags = TaggedItem.objects.filter(object_id=word_id)
     if xspf:
         return object_detail(request, words,object_id=word_id,
-                template_name='word/word_xspf.html')
-    return object_detail(request, words,object_id=word_id)
+                template_name='word/word_xspf.html',
+               extra_context={'tags':tags} )
+    return object_detail(request, words,object_id=word_id,
+            extra_context={'tags':tags})
 
 def show_pdf(request,cat_id):
     tag = Tag.objects.get(pk=cat_id)
@@ -131,7 +134,7 @@ def show_pdf(request,cat_id):
     count = 0
     for id in word_ids:
         word = Word.objects.get(pk=id['object_id'])
-        p = Paragraph("%s - %s" % (word.secwepemc, word.english),style)
+        p = Paragraph("%s - %s" % (word.secwepemc, word.english()),style)
         Catalog.append(p)
         s = Spacer(1, 0.25*inch)
         Catalog.append(s)

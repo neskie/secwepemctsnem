@@ -11,7 +11,7 @@
 </style>
 <link rel="StyleSheet" href="{{MEDIA_URL}}css/style.css" type="text/css" /> 
 <link rel="StyleSheet" href="{{MEDIA_URL}}css/menu_style.css" type="text/css" /> 
-<link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/23736.css">
+<link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/23736.css" />
 {% block styles %}
 {% endblock %}
 {% block scripts %}
@@ -31,24 +31,11 @@
 </script>
 </head>
 <body>
-<div id="header" class="container_12">
-  <div id="site-title" class="grid_6">
-  <h1><a href="/">Secwepemctsnem</a></h1>
-  </div>
-  <div id="messages" class="grid_6">
-<p class="grid_3 alpha">
-<em>Word of the Day</em><br/>
-{%include "word/random.html" %}
-</p>
-    <img style="height:63px;" class="grid_3 omega" src="{{ MEDIA_URL }}images/corner-kekuli.png"/>
-  </div>
-
-    
-</div> <!-- End Header -->
+  <div id="menu-wrapper" style="width:100%;background-color:#343434;height:31px">
   <div id="menu" class="container_12">
-    <div class="grid_12">
+    <div class="grid_8">
     <ul>
-        <li><a href="/about">About</a></li>
+        <li style="margin-left:-20px"><a href="/about">About</a></li>
         <li><a href="/words">Words</a></li>
         <li><a href="/search">Search</a></li>
         {% if user.is_superuser %}
@@ -67,6 +54,30 @@
         {%endif %}
     </ul>
   </div>
+  <div class="grid_4">
+    {% block "nav-search" %}
+{% include "search/search_block.html" %}
+{% endblock %}
+  </div>
+
+  </div>
+  </div>
+
+<div id="header-wrapper" style="width:100%;background-color:#AAA">
+<div id="header" class="container_12" >
+  <div id="site-title" class="grid_6">
+    <a href="/" style="margin-left:0px;color:#000">
+      <img alt="Secwepemctsnem" style="border:0px;margin-top:5px;margin-bottom:5px" src="{{ MEDIA_URL }}images/secwepemctsnem.png"/></a>
+  </div>
+  <div id="messages" class="grid_6">
+<p class="grid_3 alpha">
+<em>Word of the Day</em><br/>
+{%include "word/random.html" %}
+</p>
+  </div>
+
+    
+</div> <!-- End Header -->
   </div>
 <div id="content" class="container_12">
 
@@ -79,15 +90,16 @@ this is content
 
 <div id="sidebar-right" class="grid_4 ">
 {% block sidebar-right %}
-{% include "search/search_block.html" %}
 {% endblock %}
 </div>
 
 </div>
 
+<div id="footer-wrapper"
+  style="height:80px;width:100%;clear:all;background-color:#A2A2A2;clear:both;">
 <div id="footer" class="container_12">
 {% block footer %}
-<div id="" class="grid_4 ">
+<div id="dp" class="grid_4 ">
 <p>
 <a href="http://www.djangoproject.com/"><img
   src="http://media.djangoproject.com/img/badges/djangosite100x25_grey.gif"
@@ -95,21 +107,21 @@ this is content
 </p>
 </div>
 
-<div id="" class="grid_4 ">
+<div id="cpr" class="grid_4 ">
 <p>
 Project Copyright 2009 Neskie Manuel <br />
 Everything else to the source.
 </p>
 </div>
 
-<div id="" class="grid_4 ">
+<div id="gh" class="grid_4 ">
 <p>
 <a href="http://github.com/neskie/secwepemctsnem"><img style="height:25px;border:0px;"
-  src="https://github.com/images/modules/header/logov3.png"/></a>
+  alt="github.com" src="https://github.com/images/modules/header/logov3.png"/></a>
 </p>
 </div>
-
     {% endblock %}
-    </div>
+</div>
+</div>
 </body>
 </html>
